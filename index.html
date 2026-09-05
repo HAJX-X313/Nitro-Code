@@ -1,0 +1,3208 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نبرد امپراتوری‌های ۲</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#141d27">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;800&display=swap');
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
+    background: #0f1720;
+    color: #eae6da;
+  }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb { background: #2a3542; border-radius: 4px; }
+
+  .header {
+    border-bottom: 1px solid #2a3542;
+    background: #141d27;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .header-inner { max-width: 1000px; margin: 0 auto; padding: 12px 16px 0; }
+  .top-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .seal {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid #7a8a99; font-size: 20px;
+  }
+  .brand-title { font-size: 18px; font-weight: 800; }
+  .brand-sub { font-size: 12px; }
+  .stats-row { display: flex; align-items: center; gap: 16px; font-size: 13px; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-label { font-size: 10px; color: #8a92a3; }
+  .stat-value { font-weight: 700; }
+  .end-turn-btn {
+    padding: 9px 16px; border-radius: 8px; background: #c9a24b; color: #141d27;
+    font-weight: 700; font-size: 13px; border: none; cursor: pointer;
+  }
+  .end-turn-btn:hover { filter: brightness(1.1); }
+  .end-turn-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .power-bar-bg { margin-top: 12px; height: 6px; border-radius: 3px; background: #232d38; overflow: hidden; }
+  .power-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
+
+  .tabs { max-width: 1000px; margin: 0 auto; padding: 0 16px 10px; display: flex; gap: 4px; overflow-x: auto; }
+  .tab-btn {
+    display: flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 6px;
+    font-size: 12px; white-space: nowrap; background: #1c2530; color: #b9c0cc; border: none; cursor: pointer;
+  }
+  .tab-btn.active { background: #c9a24b; color: #141d27; font-weight: 700; }
+  .tab-btn:hover:not(.active) { background: #232d38; }
+
+  .flash {
+    max-width: 1000px; margin: 0 auto; padding: 12px 16px 0;
+  }
+  .flash-box {
+    border-radius: 8px; padding: 10px 12px; font-size: 12px; display: flex;
+    align-items: flex-start; justify-content: space-between; gap: 8px; border: 1px solid #2a3542;
+    background: #1c2530; color: #b9c0cc;
+  }
+  .flash-box.warn { background: #2b1c1c; border-color: #5a2f2f; color: #e5a9a3; }
+  .flash-title { font-weight: 700; margin-bottom: 2px; }
+  .flash-close { background: none; border: none; color: #8a92a3; cursor: pointer; font-size: 13px; }
+
+  .gameover { max-width: 1000px; margin: 0 auto; padding: 12px 16px 0; }
+  .gameover-box { border-radius: 12px; padding: 16px; text-align: center; border: 1px solid; }
+  .gameover-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+  .gameover-body { font-size: 13px; }
+
+  .main { max-width: 1000px; margin: 0 auto; padding: 20px 16px; display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+  @media (max-width: 800px) { .main { grid-template-columns: 1fr; } }
+
+  .card { border-radius: 12px; background: #141d27; border: 1px solid #232d38; padding: 16px; margin-bottom: 16px; }
+  .card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .card-icon { font-size: 16px; }
+  .card-title { font-weight: 700; font-size: 14px; }
+  .card-sub { font-size: 12px; color: #8a92a3; margin-bottom: 12px; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) { .grid2 { grid-template-columns: 1fr; } }
+  .grid2-4 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .action-btn {
+    width: 100%; display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 12px; border-radius: 8px; background: #1c2530; border: 1px solid #2a3542;
+    color: #eae6da; font-size: 12px; cursor: pointer; margin-bottom: 6px; font-family: inherit;
+  }
+  .action-btn:hover { background: #232d38; }
+  .action-btn:active { transform: scale(0.98); }
+  .action-cost { font-weight: 700; }
+
+  .war-btn {
+    width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 9px 12px; border-radius: 8px; background: #2a1c1c; border: 1px solid #5a2f2f;
+    color: #e07a6f; font-size: 12px; cursor: pointer; font-family: inherit;
+  }
+  .war-btn:hover { background: #3a2424; }
+
+  .range-input { width: 100%; accent-color: #c9a24b; margin-top: 4px; }
+  .range-label { font-size: 12px; color: #b9c0cc; }
+  .range-note { font-size: 10px; color: #8a92a3; margin-top: 4px; }
+
+  .bar-bg { height: 6px; border-radius: 3px; background: #232d38; overflow: hidden; margin-bottom: 12px; }
+  .bar-fill { height: 100%; }
+
+  .stat-row { display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 8px; }
+  .stat-row-label { color: #8a92a3; }
+  .stat-row-value { font-weight: 700; }
+  .stat-row-value.bad { color: #e07a6f; }
+
+  .log-item { font-size: 12px; color: #b9c0cc; border-right: 2px solid #2a3542; padding: 2px 8px; margin-bottom: 8px; }
+  .log-list { max-height: 320px; overflow-y: auto; padding-left: 4px; }
+
+  .crisis-note { color: #e0a95f; font-size: 12px; display: flex; align-items: center; gap: 4px; margin-top: 4px; }
+
+  .country-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="top-row">
+      <div class="brand">
+        <div id="seal" class="seal">👑</div>
+        <div>
+          <div class="brand-title">نبرد امپراتوری‌های ۲</div>
+          <div id="rankLabel" class="brand-sub">کشور محلی · امتیاز قدرت 0</div>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat"><div class="stat-label">سال</div><div id="statYear" class="stat-value">1404</div></div>
+        <div class="stat"><div class="stat-label">خزانه</div><div id="statTreasury" class="stat-value">0M$</div></div>
+        <div class="stat"><div class="stat-label">جمعیت</div><div id="statPopulation" class="stat-value">0M</div></div>
+        <div class="stat"><div class="stat-label">رضایت</div><div id="statHappiness" class="stat-value">0%</div></div>
+        <button id="endTurnBtn" class="end-turn-btn">پایان نوبت ›</button>
+        <button id="newGameBtn" class="end-turn-btn" style="background:#2a3542; color:#eae6da;">بازی جدید</button>
+      </div>
+    </div>
+    <div class="power-bar-bg"><div id="powerBar" class="power-bar-fill" style="width:0%;"></div></div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+</div>
+
+<div id="flashArea" class="flash"></div>
+<div id="gameOverArea" class="gameover"></div>
+
+<div class="main">
+  <div id="tabContent"></div>
+  <div>
+    <div class="card">
+      <div class="card-head"><span class="card-icon">🔮</span><div class="card-title">پیش‌بینی نوبت بعد</div></div>
+      <div id="forecastPanel"></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="card-icon">📈</span><div class="card-title">شاخص‌های کلیدی</div></div>
+      <div id="keyStats"></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="card-icon">📜</span><div class="card-title">رویدادهای اخیر</div></div>
+      <div id="eventLogList" class="log-list"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---------- state ----------
+const COUNTRIES = [
+  { id: "iran", name: "ایران", flag: "🇮🇷", tier: 2 },
+  { id: "usa", name: "آمریکا", flag: "🇺🇸", tier: 4 },
+  { id: "russia", name: "روسیه", flag: "🇷🇺", tier: 4 },
+  { id: "china", name: "چین", flag: "🇨🇳", tier: 4 },
+  { id: "uk", name: "بریتانیا", flag: "🇬🇧", tier: 3 },
+  { id: "france", name: "فرانسه", flag: "🇫🇷", tier: 3 },
+  { id: "germany", name: "آلمان", flag: "🇩🇪", tier: 3 },
+  { id: "japan", name: "ژاپن", flag: "🇯🇵", tier: 3 },
+  { id: "india", name: "هند", flag: "🇮🇳", tier: 3 },
+  { id: "saudi", name: "عربستان سعودی", flag: "🇸🇦", tier: 2 },
+  { id: "turkey", name: "ترکیه", flag: "🇹🇷", tier: 2 },
+  { id: "israel", name: "اسرائیل", flag: "🇮🇱", tier: 2 },
+  { id: "pakistan", name: "پاکستان", flag: "🇵🇰", tier: 2 },
+  { id: "skorea", name: "کره جنوبی", flag: "🇰🇷", tier: 2 },
+  { id: "italy", name: "ایتالیا", flag: "🇮🇹", tier: 2 },
+  { id: "egypt", name: "مصر", flag: "🇪🇬", tier: 2 },
+  { id: "brazil", name: "برزیل", flag: "🇧🇷", tier: 3 },
+  { id: "canada", name: "کانادا", flag: "🇨🇦", tier: 2 },
+  { id: "australia", name: "استرالیا", flag: "🇦🇺", tier: 2 },
+  { id: "indonesia", name: "اندونزی", flag: "🇮🇩", tier: 2 },
+];
+
+// faction-specific equipment rosters — every nation buys its own real-world-flavored
+// hardware instead of one generic "tank/jet/ship" placeholder. Buying any entry in a
+// category still adds to the shared category counter (state.tanks / state.jets / state.ships /
+// state.artillery) that drives militaryPower(), upkeep and combat, so overall game balance
+// is untouched — only the name, icon and per-unit breakdown shown to the player change.
+const DEFAULT_ROSTER = {
+  ground: [{ id: "mbt", name: "تانک اصلی رزمی", icon: "🛡️" }],
+  air: [{ id: "jet_multi", name: "جنگنده چندمنظوره", icon: "✈️" }],
+  navy: [{ id: "frigate", name: "ناوچه رزمی", icon: "🚢" }],
+  artillery: [{ id: "howitzer", name: "توپخانه خودکششی", icon: "💥" }],
+};
+const FACTION_ROSTER = {
+  usa: {
+    ground: [{ id: "abrams", name: "تانک M1 آبرامز", icon: "🛡️" }],
+    air: [
+      { id: "f22", name: "اف-۲۲ رپتور", icon: "✈️" },
+      { id: "f35", name: "اف-۳۵ لایتنینگ II", icon: "✈️" },
+      { id: "f18", name: "اف/ای-۱۸ سوپر هورنت", icon: "✈️" },
+      { id: "f16", name: "اف-۱۶ فایتینگ فالکون", icon: "✈️" },
+    ],
+    navy: [
+      { id: "burke", name: "ناوشکن آرلی برک", icon: "🚢" },
+      { id: "nimitz", name: "ناو هواپیمابر نیمیتز", icon: "🛳️" },
+      { id: "tico", name: "ناو رزمی تیکوندروگا", icon: "⚓" },
+    ],
+    artillery: [
+      { id: "himars", name: "راکت‌انداز هایمارس", icon: "💥" },
+      { id: "paladin", name: "خودکششی M109 پالادین", icon: "💣" },
+    ],
+  },
+  iran: {
+    ground: [{ id: "zolfaqar", name: "تانک ذوالفقار", icon: "🛡️" }],
+    air: [
+      { id: "shahed136", name: "پهپاد انتحاری شاهد-۱۳۶", icon: "🛩️" },
+      { id: "mohajer6", name: "پهپاد رزمی مهاجر-۶", icon: "🛩️" },
+      { id: "f14", name: "اف-۱۴ تام‌کت", icon: "✈️" },
+    ],
+    navy: [
+      { id: "moudge", name: "ناوشکن موج", icon: "🚢" },
+      { id: "speedboat", name: "قایق تندروی مسلح", icon: "⛵" },
+    ],
+    artillery: [
+      { id: "fateh110", name: "موشک بالستیک فاتح-۱۱۰", icon: "🚀" },
+      { id: "shahab3", name: "موشک بالستیک شهاب-۳", icon: "☄️" },
+      { id: "kheibar", name: "موشک بالستیک خیبرشکن", icon: "💥" },
+    ],
+  },
+  russia: {
+    ground: [{ id: "t90", name: "تانک تی-۹۰", icon: "🛡️" }],
+    air: [
+      { id: "su57", name: "سوخو-۵۷", icon: "✈️" },
+      { id: "su35", name: "سوخو-۳۵", icon: "✈️" },
+      { id: "mig29", name: "میگ-۲۹", icon: "✈️" },
+    ],
+    navy: [
+      { id: "kuznetsov", name: "ناو هواپیمابر آدمیرال کوزنتسوف", icon: "🛳️" },
+      { id: "kilo", name: "زیردریایی کلاس کیلو", icon: "⚓" },
+    ],
+    artillery: [
+      { id: "smerch", name: "راکت‌انداز چندلوله اسمرچ", icon: "💥" },
+      { id: "iskander", name: "موشک بالستیک اسکندر", icon: "🚀" },
+    ],
+  },
+  china: {
+    ground: [{ id: "type99", name: "تانک نوع ۹۹", icon: "🛡️" }],
+    air: [
+      { id: "j20", name: "جی-۲۰", icon: "✈️" },
+      { id: "j16", name: "جی-۱۶", icon: "✈️" },
+      { id: "j10", name: "جی-۱۰", icon: "✈️" },
+    ],
+    navy: [
+      { id: "shandong", name: "ناو هواپیمابر شاندونگ", icon: "🛳️" },
+      { id: "type055", name: "ناوشکن نوع ۰۵۵", icon: "🚢" },
+    ],
+    artillery: [
+      { id: "df21", name: "موشک بالستیک دونگ‌فنگ-۲۱", icon: "🚀" },
+      { id: "plz05", name: "توپخانه خودکششی PLZ-05", icon: "💥" },
+    ],
+  },
+  uk: {
+    ground: [{ id: "challenger2", name: "تانک چلنجر ۲", icon: "🛡️" }],
+    air: [
+      { id: "typhoon_uk", name: "یوروفایتر تایفون", icon: "✈️" },
+      { id: "f35b", name: "اف-۳۵بی", icon: "✈️" },
+    ],
+    navy: [
+      { id: "qe", name: "ناو هواپیمابر ملکه الیزابت", icon: "🛳️" },
+      { id: "type45", name: "ناوشکن کلاس تایپ ۴۵", icon: "🚢" },
+    ],
+    artillery: [{ id: "as90", name: "توپخانه خودکششی AS90", icon: "💥" }],
+  },
+  france: {
+    ground: [{ id: "leclerc", name: "تانک لکلرک", icon: "🛡️" }],
+    air: [
+      { id: "rafale", name: "رافال", icon: "✈️" },
+      { id: "mirage2000", name: "میراژ ۲۰۰۰", icon: "✈️" },
+    ],
+    navy: [
+      { id: "cdg", name: "ناو هواپیمابر شارل دوگل", icon: "🛳️" },
+      { id: "barracuda", name: "زیردریایی هسته‌ای باراکودا", icon: "⚓" },
+    ],
+    artillery: [{ id: "caesar", name: "توپخانه خودکششی سزار", icon: "💥" }],
+  },
+  germany: {
+    ground: [{ id: "leopard2", name: "تانک لئوپارد ۲", icon: "🛡️" }],
+    air: [
+      { id: "typhoon_de", name: "یوروفایتر تایفون", icon: "✈️" },
+      { id: "tornado", name: "تورنادو", icon: "✈️" },
+    ],
+    navy: [
+      { id: "sachsen", name: "ناوشکن کلاس زاکسن", icon: "🚢" },
+      { id: "type212", name: "زیردریایی کلاس ۲۱۲", icon: "⚓" },
+    ],
+    artillery: [{ id: "pzh2000", name: "توپخانه خودکششی PzH 2000", icon: "💥" }],
+  },
+  japan: {
+    ground: [{ id: "type10", name: "تانک نوع ۱۰", icon: "🛡️" }],
+    air: [
+      { id: "f35a_jp", name: "اف-۳۵ای", icon: "✈️" },
+      { id: "f2", name: "میتسوبیشی اف-۲", icon: "✈️" },
+    ],
+    navy: [
+      { id: "izumo", name: "ناو هلی‌بر ایزومو", icon: "🛳️" },
+      { id: "kongo", name: "ناوشکن کلاس کونگو", icon: "🚢" },
+    ],
+    artillery: [{ id: "type99_arty", name: "توپخانه خودکششی نوع ۹۹", icon: "💥" }],
+  },
+  india: {
+    ground: [{ id: "t90bhishma", name: "تانک تی-۹۰ بیشما", icon: "🛡️" }],
+    air: [
+      { id: "su30mki", name: "سوخو-۳۰ ام‌کی‌آی", icon: "✈️" },
+      { id: "tejas", name: "تجاس", icon: "✈️" },
+      { id: "rafale_in", name: "رافال", icon: "✈️" },
+    ],
+    navy: [
+      { id: "vikrant", name: "ناو هواپیمابر ویکرانت", icon: "🛳️" },
+      { id: "arihant", name: "زیردریایی هسته‌ای آریهانت", icon: "⚓" },
+    ],
+    artillery: [
+      { id: "dhanush", name: "توپخانه دانوش", icon: "💥" },
+      { id: "brahmos", name: "موشک کروز براهموس", icon: "🚀" },
+    ],
+  },
+  saudi: {
+    ground: [{ id: "m1a2_sa", name: "تانک M1A2 آبرامز", icon: "🛡️" }],
+    air: [
+      { id: "f15_sa", name: "اف-۱۵ ایگل", icon: "✈️" },
+      { id: "typhoon_sa", name: "یوروفایتر تایفون", icon: "✈️" },
+    ],
+    navy: [{ id: "alriyadh", name: "ناوشکن کلاس الریاض", icon: "🚢" }],
+    artillery: [{ id: "patriot", name: "سامانه پدافند پاتریوت", icon: "💥" }],
+  },
+  turkey: {
+    ground: [{ id: "altay", name: "تانک آلتای", icon: "🛡️" }],
+    air: [
+      { id: "f16_tr", name: "اف-۱۶", icon: "✈️" },
+      { id: "kaan", name: "جنگنده ملی کاآن", icon: "✈️" },
+    ],
+    navy: [{ id: "istanbul", name: "ناوچه کلاس ایستانبول", icon: "🚢" }],
+    artillery: [
+      { id: "bayraktar", name: "پهپاد بایراکتار TB2", icon: "🛩️" },
+      { id: "tayfun", name: "موشک بالستیک تایفون", icon: "🚀" },
+    ],
+  },
+  israel: {
+    ground: [{ id: "merkava", name: "تانک مرکاوا", icon: "🛡️" }],
+    air: [
+      { id: "f35i", name: "اف-۳۵آی آدیر", icon: "✈️" },
+      { id: "f16i", name: "اف-۱۶آی سوفا", icon: "✈️" },
+    ],
+    navy: [{ id: "saar6", name: "ناوچه کلاس ساعر ۶", icon: "🚢" }],
+    artillery: [
+      { id: "irondome", name: "سامانه پدافند گنبد آهنین", icon: "💥" },
+      { id: "davidsling", name: "سامانه پدافند تیر داوود", icon: "🚀" },
+    ],
+  },
+  pakistan: {
+    ground: [{ id: "alkhalid", name: "تانک الخالد", icon: "🛡️" }],
+    air: [
+      { id: "jf17", name: "جنگنده جی‌اف-۱۷ تاندر", icon: "✈️" },
+      { id: "f16_pk", name: "اف-۱۶", icon: "✈️" },
+    ],
+    navy: [{ id: "agosta", name: "زیردریایی کلاس آگوستا", icon: "⚓" }],
+    artillery: [{ id: "shaheen", name: "موشک بالستیک شاهین", icon: "🚀" }],
+  },
+  skorea: {
+    ground: [{ id: "k2blackpanther", name: "تانک کی۲ بلک پنتر", icon: "🛡️" }],
+    air: [
+      { id: "f35a_kr", name: "اف-۳۵ای", icon: "✈️" },
+      { id: "kf21", name: "کی‌اف-۲۱ بورامائه", icon: "✈️" },
+    ],
+    navy: [{ id: "sejong", name: "ناوشکن کلاس سجونگ بزرگ", icon: "🚢" }],
+    artillery: [{ id: "k9thunder", name: "توپخانه خودکششی کی۹ ثاندر", icon: "💥" }],
+  },
+  italy: {
+    ground: [{ id: "ariete", name: "تانک آریته", icon: "🛡️" }],
+    air: [
+      { id: "typhoon_it", name: "یوروفایتر تایفون", icon: "✈️" },
+      { id: "f35a_it", name: "اف-۳۵ای", icon: "✈️" },
+    ],
+    navy: [{ id: "cavour", name: "ناو هواپیمابر کاوور", icon: "🛳️" }],
+    artillery: [{ id: "pzh2000_it", name: "توپخانه خودکششی PzH 2000", icon: "💥" }],
+  },
+  egypt: {
+    ground: [{ id: "m1abrams_eg", name: "تانک M1 آبرامز", icon: "🛡️" }],
+    air: [
+      { id: "rafale_eg", name: "رافال", icon: "✈️" },
+      { id: "mig29m", name: "میگ-۲۹ام", icon: "✈️" },
+    ],
+    navy: [{ id: "mistral_eg", name: "ناو حامل هلیکوپتر میسترال", icon: "🛳️" }],
+    artillery: [{ id: "bm21", name: "راکت‌انداز چندلوله BM-21", icon: "💥" }],
+  },
+  brazil: {
+    ground: [{ id: "leopard1a1", name: "تانک لئوپارد ۱ای۱", icon: "🛡️" }],
+    air: [{ id: "gripen", name: "گریپن ای/بی", icon: "✈️" }],
+    navy: [{ id: "atlantico", name: "ناو هواپیمابر آتلانتیکو", icon: "🛳️" }],
+    artillery: [{ id: "astros2", name: "راکت‌انداز آویبراس ASTROS II", icon: "💥" }],
+  },
+  canada: {
+    ground: [{ id: "leopard2a6", name: "تانک لئوپارد ۲ای۶ام", icon: "🛡️" }],
+    air: [{ id: "cf18", name: "سی‌اف-۱۸ هورنت", icon: "✈️" }],
+    navy: [{ id: "halifax", name: "ناوچه کلاس هالیفاکس", icon: "🚢" }],
+    artillery: [{ id: "m777_ca", name: "توپخانه هوابرد M777", icon: "💥" }],
+  },
+  australia: {
+    ground: [{ id: "m1a1_au", name: "تانک M1A1 آبرامز", icon: "🛡️" }],
+    air: [
+      { id: "f35a_au", name: "اف-۳۵ای", icon: "✈️" },
+      { id: "growler", name: "ای‌ای-۱۸جی گراولر", icon: "✈️" },
+    ],
+    navy: [{ id: "hobart", name: "ناوشکن کلاس هوبارت", icon: "🚢" }],
+    artillery: [{ id: "m777_au", name: "توپخانه هوابرد M777", icon: "💥" }],
+  },
+  indonesia: {
+    ground: [{ id: "leopard2ri", name: "تانک لئوپارد ۲آرآی", icon: "🛡️" }],
+    air: [
+      { id: "f16_id", name: "اف-۱۶", icon: "✈️" },
+      { id: "su27_30", name: "سوخو-۲۷/۳۰", icon: "✈️" },
+    ],
+    navy: [{ id: "martadinata", name: "فریگیت کلاس مارتادیناتا", icon: "🚢" }],
+    artillery: [{ id: "caesar_id", name: "توپخانه خودکششی سزار", icon: "💥" }],
+  },
+};
+function rosterFor(countryId) {
+  return FACTION_ROSTER[countryId] || DEFAULT_ROSTER;
+}
+
+const RANKS = [
+  { min: 0, name: "کشور محلی", color: "#7a8a99" },
+  { min: 20, name: "قدرت منطقه‌ای", color: "#5b8fb9" },
+  { min: 40, name: "قدرت بزرگ", color: "#c9a24b" },
+  { min: 65, name: "ابرقدرت نوظهور", color: "#d98a3d" },
+  { min: 90, name: "ابرقدرت جهانی", color: "#d9534f" },
+];
+const TABS = [
+  { id: "map", label: "نقشه", icon: "🗺️" },
+  { id: "economy", label: "اقتصاد", icon: "💰" },
+  { id: "infra", label: "صنعت و زیرساخت", icon: "🏭" },
+  { id: "military", label: "ارتش", icon: "🛡️" },
+  { id: "diplomacy", label: "دیپلماسی", icon: "🌐" },
+  { id: "un", label: "سازمان ملل", icon: "🇺🇳" },
+  { id: "tech", label: "تحقیقات", icon: "🔬" },
+  { id: "focus", label: "کانون‌های ملی", icon: "🎯" },
+  { id: "laws", label: "قوانین", icon: "⚖️" },
+  { id: "leadership", label: "رهبری", icon: "👑" },
+  { id: "achievements", label: "دستاوردها", icon: "🏆" },
+  { id: "advisor", label: "مشاور هوش مصنوعی", icon: "🤖" },
+];
+
+// casus belli options — each war must be justified with one of these before it can be declared.
+// legitimacy (0-100) drives how the UN / world opinion reacts once the war starts.
+const WAR_REASONS = [
+  {
+    id: "retaliation", icon: "🛡️", name: "تلافی خصومت اخیر",
+    desc: "پاسخ نظامی به خرابکاری، محاصره یا اعلام جنگ اخیر این کشور علیه شما.",
+    legitimacy: 78,
+    available: (country, r) => r.score <= 25,
+    unavailableHint: "فقط زمانی در دسترس است که روابط دوجانبه بسیار پایین (نتیجه خصومت متقابل) باشد.",
+  },
+  {
+    id: "ally_defense", icon: "🤝", name: "دفاع از متحد",
+    desc: "ورود به جنگ در دفاع از یکی از متحدان یا شرکای تجاری شما که با این کشور در تنش است.",
+    legitimacy: 82,
+    available: (country, r) => r.score <= 40 && Object.entries(state.relations).some(([c2, r2]) => c2 !== country && (r2.status === "اتحاد" || r2.status === "تجارت")),
+    unavailableHint: "به یک متحد یا شریک تجاری فعال و روابط پایین با هدف نیاز دارد.",
+  },
+  {
+    id: "humanitarian", icon: "🕊️", name: "دفاع از غیرنظامیان",
+    desc: "این کشور به خشونت گسترده یا سرکوب غیرنظامیان متهم است و مداخله برای توقف آن اعلام می‌شود.",
+    legitimacy: 68,
+    available: () => true,
+  },
+  {
+    id: "proxy_threat", icon: "🎯", name: "حمایت از گروه‌های نیابتی متخاصم",
+    desc: "این کشور از شبه‌نظامیان یا نیروهای نیابتی حمایت می‌کند که امنیت شما را هدف قرار داده‌اند.",
+    legitimacy: 62,
+    available: () => true,
+  },
+  {
+    id: "wmd", icon: "☢️", name: "برنامه تسلیحاتی خطرناک",
+    desc: "هشدار درباره برنامه سلاح کشتار جمعی این کشور که ثبات منطقه را تهدید می‌کند.",
+    legitimacy: 55,
+    available: () => true,
+  },
+  {
+    id: "border", icon: "🗺️", name: "تنازع مرزی و ارضی",
+    desc: "ادعای مالکیت بر سرزمین‌های مورد مناقشه در مرز مشترک.",
+    legitimacy: 48,
+    available: () => true,
+  },
+  {
+    id: "fabricated", icon: "🎭", name: "دلیل ساختگی",
+    desc: "بهانه‌ای بدون پشتوانه واقعی. ریسک بالا: در صورت افشا اعتبار جهانی شما به‌شدت آسیب می‌بیند.",
+    legitimacy: 22,
+    available: () => true,
+  },
+  {
+    id: "none", icon: "💥", name: "حمله ناگهانی (بدون توجیه)",
+    desc: "اعلام جنگ بدون ارائه هیچ دلیلی به افکار عمومی جهانی. سازمان ملل و قدرت‌های بزرگ به‌شدت واکنش نشان می‌دهند.",
+    legitimacy: 0,
+    available: () => true,
+  },
+];
+
+const FOCUS_TREE = [
+  { id: "eco1", name: "برنامه صنعتی‌سازی ملی", icon: "🏗️", cat: "اقتصادی", desc: "سرمایه‌گذاری گسترده در صنایع پایه.", cost: 500, turns: 3, requires: [], effect: s => { s.factories += 1; s.unemployment = clamp(s.unemployment - 2, 2, 100); } },
+  { id: "eco2", name: "توسعه زیرساخت ملی", icon: "🌉", cat: "اقتصادی", desc: "گسترش سراسری جاده‌ها و راه‌آهن.", cost: 700, turns: 4, requires: ["eco1"], effect: s => { s.roads = clamp(s.roads + 15, 0, 100); s.railways += 1; } },
+  { id: "eco3", name: "صندوق ثروت ملی", icon: "💹", cat: "اقتصادی", desc: "ایجاد صندوق سرمایه‌گذاری از درآمد نفت و صنعت.", cost: 900, turns: 5, requires: ["eco2"], effect: s => { s.treasury += 1500; } },
+  { id: "mil1", name: "بازسازی ارتش", icon: "🪖", cat: "نظامی", desc: "نوسازی و گسترش نیروی زمینی.", cost: 400, turns: 3, requires: [], effect: s => { s.soldiers += 15000; s.tanks += 5; } },
+  { id: "mil2", name: "برنامه توپخانه سنگین", icon: "💣", cat: "نظامی", desc: "تجهیز ارتش به توپخانه پیشرفته.", cost: 600, turns: 4, requires: ["mil1"], effect: s => { s.artillery += 8; } },
+  { id: "mil3", name: "ناوگان دریایی مدرن", icon: "⚓", cat: "نظامی", desc: "ساخت ناوهای جنگی نوین برای محاصره و دفاع دریایی.", cost: 900, turns: 5, requires: ["mil1"], effect: s => { s.ships += 4; } },
+  { id: "mil4", name: "نیروی هوایی راهبردی", icon: "🛩️", cat: "نظامی", desc: "توسعه ناوگان جنگنده‌های پیشرفته.", cost: 1400, turns: 6, requires: ["mil2"], effect: s => { s.jets += 5; } },
+  { id: "pol1", name: "اصلاحات سیاسی", icon: "🏛️", cat: "سیاسی", desc: "بازنگری در ساختار حکمرانی داخلی.", cost: 350, turns: 3, requires: [], effect: s => { s.happiness = clamp(s.happiness + 8, 0, 100); } },
+  { id: "pol2", name: "دیپلماسی فعال جهانی", icon: "🤝", cat: "سیاسی", desc: "گسترش هم‌زمان روابط خارجی با همه کشورها.", cost: 500, turns: 4, requires: ["pol1"], effect: s => { Object.values(s.relations).forEach(r => { if (r.status !== "جنگ") r.score = clamp(r.score + 10, 0, 100); }); } },
+  { id: "tech1", name: "سرمایه‌گذاری در علم", icon: "🧪", cat: "علمی", desc: "تأسیس مراکز پژوهشی سراسری.", cost: 500, turns: 3, requires: [], effect: s => { s.techLevel = clamp(s.techLevel + 10, 0, 100); s.universities += 1; } },
+  { id: "nuke1", name: "برنامه هسته‌ای پایه", icon: "⚛️", cat: "هسته‌ای", desc: "آغاز تحقیقات هسته‌ای صلح‌آمیز.", cost: 1200, turns: 5, requires: ["tech1"], minTech: 25, effect: s => { s.nuclearStage = 1; } },
+  { id: "nuke2", name: "غنی‌سازی اورانیوم", icon: "🧬", cat: "هسته‌ای", desc: "ارتقای ظرفیت غنی‌سازی اورانیوم کشور.", cost: 1800, turns: 6, requires: ["nuke1"], minTech: 45, effect: s => { s.nuclearStage = 2; } },
+  { id: "nuke3", name: "ساخت بمب اتم", icon: "☢️", cat: "هسته‌ای", desc: "تکمیل نخستین کلاهک هسته‌ای کشور و آماده‌سازی آن برای استفاده احتمالی.", cost: 2600, turns: 8, requires: ["nuke2"], minTech: 65, effect: s => {
+      s.nuclearStage = 3; s.hasNuclearWeapon = true; s.nuclearWarheads = (s.nuclearWarheads || 0) + 2;
+      Object.values(s.relations).forEach(r => { r.score = clamp(r.score - 20, 0, 100); });
+      flashMsg("⚛️ قدرت هسته‌ای", "کشور شما رسماً به باشگاه دارندگان سلاح هسته‌ای پیوست و ۲ کلاهک آماده استفاده در اختیار دارد! این موضوع نگرانی جهانی برانگیخته و روابط دیپلماتیک را تحت فشار قرار داده است.", "warn");
+    } },
+];
+
+const LAWS = [
+  { id: "law_econ", name: "قانون اصلاحات اقتصادی", icon: "💰", desc: "تسهیل سرمایه‌گذاری داخلی و کاهش بیکاری.", cost: 400, effect: s => { s.treasury += 800; s.unemployment = clamp(s.unemployment - 3, 2, 100); } },
+  { id: "law_press", name: "قانون آزادی مطبوعات", icon: "📰", desc: "افزایش شفافیت و رضایت عمومی.", cost: 300, effect: s => { s.happiness = clamp(s.happiness + 10, 0, 100); } },
+  { id: "law_draft", name: "قانون خدمت نظام اجباری", icon: "🎖️", desc: "افزایش نیروی انسانی ارتش با هزینه رضایت عمومی.", cost: 350, effect: s => { s.soldiers += 20000; s.happiness = clamp(s.happiness - 5, 0, 100); } },
+  { id: "law_anticorrupt", name: "قانون مبارزه با فساد اداری", icon: "🕵️", desc: "افزایش کارایی خزانه‌داری و رضایت مردم.", cost: 450, effect: s => { s.happiness = clamp(s.happiness + 6, 0, 100); s.treasury += 500; } },
+  { id: "law_foreign_invest", name: "قانون جذب سرمایه‌گذاری خارجی", icon: "🌍", desc: "جذب سرمایه از شرکای تجاری و متحدان.", cost: 500, effect: s => { s.treasury += 1000; Object.values(s.relations).forEach(r => { if (r.status === "تجارت" || r.status === "اتحاد") r.score = clamp(r.score + 5, 0, 100); }); } },
+  { id: "law_space", name: "قانون برنامه فضایی و راهبردی", icon: "🚀", desc: "سرمایه‌گذاری در فناوری‌های پیشرفته.", cost: 800, minTech: 40, effect: s => { s.techLevel = clamp(s.techLevel + 8, 0, 100); } },
+  { id: "law_emergency", name: "قانون وضعیت اضطراری دفاعی", icon: "🚨", desc: "بسیج سریع منابع نظامی با هزینه رضایت عمومی.", cost: 300, effect: s => { s.tanks += 3; s.artillery += 3; s.happiness = clamp(s.happiness - 8, 0, 100); } },
+  { id: "law_welfare", name: "قانون تأمین اجتماعی", icon: "🏥", desc: "بهبود سطح رفاه و بهداشت عمومی.", cost: 400, effect: s => { s.health = clamp(s.health + 8, 0, 100); s.happiness = clamp(s.happiness + 5, 0, 100); } },
+  { id: "law_central_bank", name: "قانون استقلال بانک مرکزی", icon: "🏦", desc: "مهار تورم از طریق سیاست‌گذاری پولی مستقل.", cost: 600, effect: s => { s.inflation = clamp(s.inflation - 12, 0, 60); } },
+  { id: "law_education", name: "قانون نوسازی نظام آموزشی", icon: "📚", desc: "بازنگری سراسری در برنامه درسی و بورسیه‌های تحصیلی.", cost: 450, effect: s => { s.education = clamp(s.education + 10, 0, 100); } },
+];
+
+// diplomatic/covert action costs — centralized so the number charged by relationAction()
+// can never drift out of sync with the number shown on the buttons that trigger it
+// (previously each cost was hard-coded separately in ~2-3 places and could silently diverge)
+const COSTS = { strengthen: 150, alliance: 300, trade: 150, peace: 200, sabotage: 300, blockade: 350, annex: 600, educate: 550, incite: 380 };
+
+// ---------- resources: oil / food / tech stockpiles, tradable beyond plain money ----------
+const RESOURCE_TYPES = [
+  { id: "oil", name: "نفت", icon: "🛢️", unitPrice: 12, note: "کمبود نفت بازده کارخانه‌ها را کاهش می‌دهد." },
+  { id: "food", name: "غذا", icon: "🌾", unitPrice: 8, note: "کمبود غذا رضایت و بهداشت عمومی را کاهش می‌دهد." },
+  { id: "tech", name: "فناوری", icon: "🔬", unitPrice: 20, note: "ذخیره بالای فناوری شانس جهش علمی خودکار را افزایش می‌دهد." },
+];
+const TRADE_UNIT = 20;
+
+// ---------- leadership generations: a leader ages every turn and eventually hands power to an heir ----------
+const LEADER_STYLES = [
+  { id: "general", name: "ژنرال", icon: "🪖", desc: "پیشینه نظامی؛ ارتش را تقویت می‌کند اما در دیپلماسی محتاط‌تر است.", econMult: 1, militaryBonus: 8, diploBonus: 0, happinessMult: 1 },
+  { id: "economist", name: "اقتصاددان", icon: "💹", desc: "پیشینه مالی؛ درآمد ملی را افزایش می‌دهد.", econMult: 1.08, militaryBonus: 0, diploBonus: 0, happinessMult: 1 },
+  { id: "diplomat", name: "دیپلمات", icon: "🤝", desc: "پیشینه دیپلماتیک؛ روابط خارجی سریع‌تر بهبود می‌یابد.", econMult: 1, militaryBonus: 0, diploBonus: 6, happinessMult: 1 },
+  { id: "populist", name: "پوپولیست", icon: "📢", desc: "محبوب میان مردم؛ رضایت عمومی را بالا نگه می‌دارد اما اقتصاد کمی ضعیف‌تر است.", econMult: 0.96, militaryBonus: 0, diploBonus: 0, happinessMult: 1.18 },
+];
+const LEADER_FIRST_NAMES = ["دانیال", "کوروش", "آرمان", "بهرام", "سالار", "پرهام", "ژینا", "آناهیتا", "سپیده", "رویا", "فرزاد", "نیما"];
+const LEADER_LAST_NAMES = ["راد", "فرهمند", "ستوده", "کیانی", "پارسا", "امینی", "شکوهی", "دلاور", "نوروزی", "بهادر"];
+function generateLeader(minAge, maxAge) {
+  const style = pickRandom(LEADER_STYLES);
+  const age = (minAge || 45) + Math.floor(Math.random() * ((maxAge || 60) - (minAge || 45)));
+  return { name: `${pickRandom(LEADER_FIRST_NAMES)} ${pickRandom(LEADER_LAST_NAMES)}`, age, styleId: style.id };
+}
+function leaderStyle(s) {
+  return LEADER_STYLES.find(x => x.id === (s.leader && s.leader.styleId)) || { econMult: 1, militaryBonus: 0, diploBonus: 0, happinessMult: 1 };
+}
+
+// ---------- achievements ----------
+const ACHIEVEMENTS = [
+  { id: "first_nuclear", icon: "☢️", name: "اولین قدرت هسته‌ای", desc: "به باشگاه دارندگان سلاح هسته‌ای بپیوندید.", check: s => !!s.hasNuclearWeapon },
+  { id: "peace_100", icon: "🕊️", name: "صد نوبت بدون جنگ", desc: "۱۰۰ نوبت متوالی بدون درگیر بودن در هیچ جنگی سپری کنید.", check: s => (s.peaceStreak || 0) >= 100 },
+  { id: "conqueror", icon: "🏴", name: "فاتح", desc: "سه سرزمین را الحاق کنید.", check: s => Object.values(s.relations || {}).filter(r => r.status === "تحت سلطه").length >= 3 },
+  { id: "superpower", icon: "🌟", name: "ابرقدرت جهانی", desc: "امتیاز قدرت ملی را به ۹۰ برسانید.", check: s => powerScore() >= 90 },
+  { id: "tycoon", icon: "💰", name: "میلیاردر ملی", desc: "خزانه را به ۲۰٬۰۰۰ میلیون دلار برسانید.", check: s => s.treasury >= 20000 },
+  { id: "diplomat_master", icon: "🤝", name: "استاد دیپلماسی", desc: "با ۸ کشور پیمان اتحاد ببندید.", check: s => Object.values(s.relations || {}).filter(r => r.status === "اتحاد").length >= 8 },
+  { id: "survivor", icon: "🛡️", name: "بازمانده", desc: "به نوبت ۵۰ برسید بدون آنکه دولت سقوط کند.", check: s => s.turn >= 50 && !s.gameOver },
+  { id: "rebel_master", icon: "🔥", name: "استاد جنگ نیابتی", desc: "۵ عملیات موفق حمایت از شورشیان انجام دهید.", check: s => (s.rebellionsIncited || 0) >= 5 },
+  { id: "dynasty", icon: "👑", name: "سلسله ماندگار", desc: "به سومین نسل رهبری کشور برسید.", check: s => (s.leaderHistory || []).length >= 2 },
+  { id: "trader", icon: "📦", name: "تاجر بزرگ", desc: "مجموعاً ۵۰۰ واحد منابع را در بازار جهانی معامله کنید.", check: s => (s.resourceTradeVolume || 0) >= 500 },
+];
+
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function fmt(n) { return Math.round(n).toLocaleString("fa-IR"); }
+// same Persian-numeral formatting as fmt(), but keeps one decimal — population, war-fatigue
+// deltas etc. were previously rendered with plain Latin digits while every money figure used
+// fa-IR digits, which looked inconsistent side by side in an RTL Persian UI.
+function fmtDec(n) { return n.toLocaleString("fa-IR", { minimumFractionDigits: 1, maximumFractionDigits: 1 }); }
+function rankOf(score) {
+  let r = RANKS[0];
+  for (const x of RANKS) if (score >= x.min) r = x;
+  return r;
+}
+
+function freshState() {
+  return {
+    turn: 1, year: 1404, treasury: 5000, population: 42, unemployment: 14,
+    happiness: 58, education: 28, health: 32, techLevel: 8, taxRate: 20,
+    oilFields: 2, factories: 1, powerPlants: 1, roads: 25, railways: 1,
+    universities: 1, hospitals: 1, soldiers: 45000, tanks: 15, artillery: 6, jets: 4, ships: 2,
+    // per-specific-unit breakdown (e.g. { ground: { abrams: 15 }, air: { f22: 2, f35: 2 }, ... }) —
+    // purely a display/flavor layer on top of the aggregate counters above, which still drive
+    // militaryPower(), upkeep and combat so balance never depends on which specific unit was bought.
+    unitPicks: { ground: {}, air: {}, navy: {}, artillery: {} },
+    crisisTurns: 0, activeTab: "economy", gameOver: null,
+    playerCountry: null, selectedMapCountry: null,
+    nuclearStage: 0, hasNuclearWeapon: false, nuclearWarheads: 0,
+    activeFocus: null, completedFocuses: [],
+    enactedLaws: [],
+    relations: {},
+    worldOpinion: 68, unSanctionTurns: 0, warJustifyTarget: null, unVoteResult: null,
+    inflation: 0, coalitionBonusTurns: 0,
+    eventLog: ["به فرماندهی کشور خوش آمدید. ابتدا کشور خود را انتخاب کنید."],
+    flash: null,
+    // --- advisor: general loyalty/coup risk + long-term memory of ignored advice ---
+    generalLoyalty: 72, coupWarningTurns: 0,
+    advisorMemory: [], recapShown: false,
+    // --- resources: tradable stockpiles beyond plain treasury money ---
+    resources: { oil: 60, food: 60, tech: 40 }, resourceTradeVolume: 0,
+    // --- covert proxy/rebel operations against other countries ---
+    rebellionsIncited: 0,
+    // --- achievements ---
+    unlockedAchievements: [], peaceStreak: 0,
+    // --- leadership generations ---
+    leader: null, leaderHistory: [], pendingSuccession: null,
+  };
+}
+
+// builds relations against the other 19 world powers once the player picks their country
+function initRelations(countryId, excludeIds) {
+  const excl = excludeIds || [];
+  const others = COUNTRIES.filter(c => c.id !== countryId && !excl.includes(c.id));
+  const rel = {};
+  others.forEach(c => {
+    // higher-tier countries start with more military power, and the whole board starts stronger
+    // than it used to — a real challenge from turn one, not just in the late game
+    const base = c.tier === 4 ? 150 + Math.floor(Math.random() * 70)
+      : c.tier === 3 ? 95 + Math.floor(Math.random() * 60)
+      : 60 + Math.floor(Math.random() * 45);
+    rel[c.name] = { score: 30 + Math.floor(Math.random() * 25), status: "خنثی", power: base, warWins: 0, warTurns: 0, blockadeTurns: 0, flag: c.flag, citiesCaptured: 0 };
+  });
+  return rel;
+}
+
+function chooseCountry(id) {
+  const c = COUNTRIES.find(x => x.id === id);
+  if (!c) return;
+  state.playerCountry = c;
+  state.relations = initRelations(id);
+  state.leader = generateLeader();
+  state.leaderHistory = [];
+  log(`🎉 شما رهبری ${c.flag} ${c.name} را در «نبرد امپراتوری‌های ۲» بر عهده گرفتید.`);
+  const startStyle = LEADER_STYLES.find(x => x.id === state.leader.styleId);
+  log(`👑 ${state.leader.name} (${startStyle.icon} ${startStyle.name}) زمام امور را در دست گرفت.`);
+  render();
+}
+
+// builds a relation entry representing another *human* hotseat player, so all existing
+// diplomacy/war/map code (which just reads state.relations[name]) works unmodified against them
+function addHumanRelation(playerState, opponentCountry) {
+  playerState.relations[opponentCountry.name] = {
+    score: 30, status: "خنثی", power: militaryPowerOf(playerState), warWins: 0, warTurns: 0,
+    blockadeTurns: 0, rebellion: 0, flag: opponentCountry.flag, citiesCaptured: 0, isHuman: true,
+  };
+}
+
+let state = freshState();
+
+// ---------- hotseat (local pass-and-play, 2 human players on one device) ----------
+// Lives entirely outside `state` so it survives being swapped in/out when we hand control
+// between the two players. Each player has their own full state object (own economy, army,
+// relations with the 18 remaining AI countries, leader, resources, etc); the two human players
+// also each carry one extra entry in their own `relations` dict representing the *other* human,
+// so all the existing diplomacy/war/map UI works against a human opponent with zero changes.
+let hotseat = { active: false, turnOf: 1, snapshots: [null, null] };
+let hotseatSetupStage = 0; // 0 = not choosing, 1 = picking player 1's country, 2 = picking player 2's country
+let hotseatP1Choice = null;
+
+function startHotseatSetup() {
+  hotseatSetupStage = 1;
+  hotseatP1Choice = null;
+  render();
+}
+
+function pickHotseatCountry(id) {
+  const c = COUNTRIES.find(x => x.id === id);
+  if (!c) return;
+  if (hotseatSetupStage === 1) {
+    hotseatP1Choice = c;
+    hotseatSetupStage = 2;
+    render();
+    return;
+  }
+  if (hotseatSetupStage === 2) {
+    const p1 = freshState();
+    p1.playerCountry = hotseatP1Choice;
+    p1.relations = initRelations(hotseatP1Choice.id, [c.id]);
+    p1.leader = generateLeader();
+    p1.leaderHistory = [];
+    addHumanRelation(p1, c);
+    p1.eventLog = [`🎉 شما رهبری ${hotseatP1Choice.flag} ${hotseatP1Choice.name} را در حالت دو نفره بر عهده گرفتید.`];
+
+    const p2 = freshState();
+    p2.playerCountry = c;
+    p2.relations = initRelations(c.id, [hotseatP1Choice.id]);
+    p2.leader = generateLeader();
+    p2.leaderHistory = [];
+    addHumanRelation(p2, hotseatP1Choice);
+    p2.eventLog = [`🎉 شما رهبری ${c.flag} ${c.name} را در حالت دو نفره بر عهده گرفتید.`];
+
+    hotseat.active = true;
+    hotseat.turnOf = 1;
+    hotseat.snapshots = [null, p2];
+    state = p1;
+    hotseatSetupStage = 0;
+    hotseatP1Choice = null;
+    render();
+  }
+}
+
+// keeps each human player's relation-entry-for-the-other in sync: status/blockade/power always
+// reflect the live truth, called every render while hotseat is active
+function syncHotseatPvp() {
+  if (!hotseat.active || !state.playerCountry) return;
+  const otherIdx = hotseat.turnOf === 1 ? 1 : 0;
+  const other = hotseat.snapshots[otherIdx];
+  if (!other || !other.playerCountry || !state.relations[other.playerCountry.name]) return;
+  const mine = state.relations[other.playerCountry.name];
+  if (!other.relations) other.relations = {};
+  if (!other.relations[state.playerCountry.name]) addHumanRelation(other, state.playerCountry);
+  const theirs = other.relations[state.playerCountry.name];
+  // status/blockade mirror exactly (a war or alliance is a two-sided fact); scores stay
+  // independent (each side's own perception), power is always a live read of the real army
+  theirs.status = mine.status;
+  theirs.blockadeTurns = mine.blockadeTurns;
+  theirs.rebellion = mine.rebellion;
+  theirs.power = militaryPowerOf(state);
+  mine.power = militaryPowerOf(other);
+}
+
+function hotseatAdvance() {
+  endTurn(); // resolves this player's own full turn (economy, AI wars, focuses, laws, advisor...)
+  hotseat.snapshots[hotseat.turnOf - 1] = state;
+  if (hotseat.turnOf === 1) {
+    hotseat.turnOf = 2;
+    state = hotseat.snapshots[1];
+  } else {
+    hotseat.turnOf = 1;
+    state = hotseat.snapshots[0];
+  }
+  state.flash = { title: `🎮 نوبت بازیکن ${hotseat.turnOf}`, body: `اکنون ${state.playerCountry.flag} ${state.playerCountry.name} را رهبری می‌کنید. دستگاه را به بازیکن ${hotseat.turnOf} بدهید.`, tone: "info" };
+  render();
+}
+
+const statusColor = { "خنثی": "#8a92a3", "اتحاد": "#4caf7d", "تجارت": "#c9a24b", "جنگ": "#c0453f", "تحت سلطه": "#9b7fd4" };
+function annexWinsNeeded(country) {
+  const p = state.relations[country].power;
+  if (p >= 130) return 6;
+  if (p >= 80) return 5;
+  return 4;
+}
+
+// parameterized so it can be evaluated against *any* saved state snapshot — needed to compute
+// a live power reading for the other human player in hotseat mode without swapping state
+function militaryPowerOf(s) {
+  const base = s.soldiers / 6000 + s.tanks * 0.9 + s.artillery * 1.3 + s.jets * 2.6 + s.ships * 2 + (s.hasNuclearWeapon ? 40 : 0);
+  return base + (s.leader ? leaderStyle(s).militaryBonus : 0);
+}
+function militaryPower() {
+  return militaryPowerOf(state);
+}
+function powerScore() {
+  const econ = clamp(state.treasury / 120 + state.factories * 3 + state.oilFields * 4, 0, 100);
+  const mil = clamp(militaryPower(), 0, 100);
+  const tech = clamp(state.techLevel, 0, 100);
+  const pop = clamp(state.population * 1.1, 0, 100);
+  const relVals = Object.values(state.relations).map(r => r.score);
+  const dipl = clamp(relVals.reduce((a, b) => a + b, 0) / relVals.length, 0, 100);
+  return Math.round(econ * 0.25 + mil * 0.25 + tech * 0.2 + pop * 0.15 + dipl * 0.15);
+}
+
+function incomeBreakdown() {
+  const employmentRate = (100 - state.unemployment) / 100;
+  const taxIncome = state.population * 9 * employmentRate * (state.taxRate / 100);
+  const oilIncome = state.oilFields * 140;
+  const industryEfficiency = state.powerPlants >= state.factories ? 1 : 0.6;
+  const factoryIncome = state.factories * 190 * industryEfficiency;
+  const tradeBonus = Object.values(state.relations).filter(r => r.status === "تجارت").length * 160;
+  const allianceBonus = Object.values(state.relations).filter(r => r.status === "اتحاد").length * 110;
+  const tributeIncome = Object.values(state.relations).filter(r => r.status === "تحت سلطه").length * 220;
+  const blockadeIncome = Object.values(state.relations).filter(r => (r.blockadeTurns || 0) > 0).length * 120;
+  const warUpkeep = Object.values(state.relations).filter(r => r.status === "جنگ").length * 550;
+  const inflationMult = 1 + state.inflation / 100;
+  const upkeep = ((state.soldiers / 1000) * 2 + state.tanks * 5 + state.artillery * 4 + state.jets * 22 + state.ships * 16 +
+    state.factories * 25 + state.hospitals * 35 + state.universities * 35 + state.powerPlants * 18) * inflationMult;
+
+  let netIncome = taxIncome + oilIncome + factoryIncome + tradeBonus + allianceBonus + tributeIncome + blockadeIncome - upkeep - warUpkeep;
+  if (state.leader) netIncome *= leaderStyle(state).econMult; // leadership style nudges the whole national budget
+  if ((state.resources && state.resources.oil) < 15) netIncome -= 120; // an oil shortage strains industry beyond the plain oilFields count
+  if (state.crisisTurns > 0) netIncome *= 0.55;
+  if (state.unSanctionTurns > 0) netIncome -= 550; // UN sanctions bite into trade and access to markets
+
+  return { taxIncome, oilIncome, factoryIncome, tradeBonus, allianceBonus, tributeIncome, blockadeIncome, warUpkeep, upkeep, netIncome };
+}
+
+function projectNextTurn() {
+  const bd = incomeBreakdown();
+  const happinessTarget = clamp(68 - state.taxRate * 0.5 - state.unemployment * 0.7 + state.health * 0.18 + state.education * 0.12, 0, 100);
+  const happinessDelta = (happinessTarget - state.happiness) * 0.15;
+  return { netIncome: bd.netIncome, happinessDelta, atWar: bd.warUpkeep > 0 };
+}
+
+function log(msg) {
+  state.eventLog = [msg, ...state.eventLog].slice(0, 40);
+}
+function flashMsg(title, body, tone) {
+  state.flash = { title, body, tone: tone || "info" };
+}
+function spend(cost) {
+  if (state.treasury < cost) {
+    flashMsg("خزانه کافی نیست", `برای این اقدام به ${fmt(cost)} میلیون دلار نیاز دارید.`, "warn");
+    return false;
+  }
+  state.treasury -= cost;
+  return true;
+}
+
+// ---------- actions ----------
+const act = {
+  factory: () => {
+    const cost = 800 + state.factories * 220;
+    if (!spend(cost)) return render();
+    state.factories++; state.unemployment = clamp(state.unemployment - 1.5, 2, 100);
+    log(`یک کارخانه جدید ساخته شد (هزینه ${fmt(cost)} میلیون دلار). نرخ بیکاری کاهش یافت.`);
+    render();
+  },
+  power: () => {
+    const cost = 950 + state.powerPlants * 260;
+    if (!spend(cost)) return render();
+    state.powerPlants++;
+    log(`نیروگاه برق جدید احداث شد (هزینه ${fmt(cost)} میلیون دلار).`);
+    render();
+  },
+  road: () => {
+    const cost = 400 + state.roads * 8;
+    if (!spend(cost)) return render();
+    state.roads = clamp(state.roads + 10, 0, 100); state.happiness = clamp(state.happiness + 1, 0, 100);
+    log(`شبکه جاده‌ای گسترش یافت (هزینه ${fmt(cost)} میلیون دلار).`);
+    render();
+  },
+  rail: () => {
+    const cost = 900 + state.railways * 300;
+    if (!spend(cost)) return render();
+    state.railways++;
+    log(`خط راه‌آهن جدید احداث شد (هزینه ${fmt(cost)} میلیون دلار).`);
+    render();
+  },
+  university: () => {
+    const cost = 700 + state.universities * 220;
+    if (!spend(cost)) return render();
+    state.universities++; state.education = clamp(state.education + 5, 0, 100);
+    log(`دانشگاه جدید افتتاح شد (هزینه ${fmt(cost)} میلیون دلار).`);
+    render();
+  },
+  hospital: () => {
+    const cost = 600 + state.hospitals * 200;
+    if (!spend(cost)) return render();
+    state.hospitals++; state.health = clamp(state.health + 5, 0, 100); state.happiness = clamp(state.happiness + 1, 0, 100);
+    log(`بیمارستان جدید ساخته شد (هزینه ${fmt(cost)} میلیون دلار).`);
+    render();
+  },
+  oil: () => {
+    const cost = 1600 + state.oilFields * 420;
+    if (!spend(cost)) return render();
+    state.oilFields++;
+    log(`چاه نفت جدیدی به بهره‌برداری رسید (هزینه ${fmt(cost)} میلیون دلار).`);
+    render();
+  },
+  soldiers: () => {
+    // small scaling like everything else below — a big standing army costs more to keep recruiting into
+    const cost = 260 + Math.floor(state.soldiers / 5000) * 4;
+    if (!spend(cost)) return render();
+    state.soldiers += 5000; state.unemployment = clamp(state.unemployment - 0.5, 2, 100);
+    log(`پنج هزار سرباز جدید استخدام و آموزش دید (هزینه ${fmt(cost)} میلیون دلار).`);
+    render();
+  },
+  // unitId picks which faction-specific piece of hardware to buy; the cost scales with how
+  // many units are already owned in that category (same pattern as factories/roads/etc.),
+  // so spamming cheap military units stops being free the way flat prices used to allow.
+  unit: (category, aggregateKey, unitId, baseCost, scaling, verb) => {
+    const cost = baseCost + state[aggregateKey] * scaling;
+    if (!spend(cost)) return render();
+    state[aggregateKey]++;
+    state.unitPicks[category][unitId] = (state.unitPicks[category][unitId] || 0) + 1;
+    const roster = rosterFor(state.playerCountry.id)[category];
+    const item = roster.find(u => u.id === unitId) || DEFAULT_ROSTER[category][0];
+    log(`${item.icon} ${verb} ${item.name} (هزینه ${fmt(cost)} میلیون دلار).`);
+    render();
+  },
+  tank: (unitId) => act.unit("ground", "tanks", unitId, 160, 10, "به ارتش زمینی افزوده شد:"),
+  artillery: (unitId) => act.unit("artillery", "artillery", unitId, 210, 14, "مستقر شد:"),
+  jet: (unitId) => act.unit("air", "jets", unitId, 650, 40, "خریداری شد:"),
+  ship: (unitId) => act.unit("navy", "ships", unitId, 520, 35, "به نیروی دریایی پیوست:"),
+  // produces another warhead for the stockpile — repeatable (unlike the one-time "ساخت بمب اتم"
+  // focus), so the arsenal can actually be replenished after being used in a strike
+  warhead: () => {
+    if (!state.hasNuclearWeapon) return render();
+    const cost = 1800 + (state.nuclearWarheads || 0) * 250;
+    if (!spend(cost)) return render();
+    state.nuclearWarheads = (state.nuclearWarheads || 0) + 1;
+    log(`🧨 یک کلاهک هسته‌ای جدید تولید و به زرادخانه افزوده شد (هزینه ${fmt(cost)} میلیون دلار). موجودی: ${fmt(state.nuclearWarheads)}.`);
+    render();
+  },
+  research: () => {
+    const cost = 550;
+    if (!spend(cost)) return render();
+    const bonus = 3 + state.universities;
+    state.techLevel = clamp(state.techLevel + bonus, 0, 100);
+    log(`پروژه تحقیقاتی به ثمر نشست؛ سطح فناوری ${bonus} واحد افزایش یافت.`);
+    render();
+  },
+  educate: () => {
+    const cost = COSTS.educate;
+    if (!spend(cost)) return render();
+    const bonus = 4 + state.universities;
+    state.education = clamp(state.education + bonus, 0, 100);
+    state.happiness = clamp(state.happiness + 1, 0, 100);
+    log(`اصلاح برنامه درسی و بورسیه‌های تحصیلی اجرا شد؛ سطح آموزش ${bonus} واحد افزایش یافت.`);
+    render();
+  },
+};
+
+// ---------- war justification / UN world opinion ----------
+const PERMANENT_MEMBERS = ["آمریکا", "روسیه", "چین"];
+
+function adjustedLegitimacy(reason, r) {
+  // attacking a country you're on good terms with looks worse to the world than
+  // attacking one you're already hostile with, even for the same stated reason.
+  const friendlinessPenalty = Math.max(0, (r.score - 45)) * 0.7;
+  return clamp(reason.legitimacy - friendlinessPenalty, 0, 100);
+}
+
+function openWarJustify(country) {
+  state.warJustifyTarget = country;
+  state.unVoteResult = null;
+  render();
+}
+
+function cancelWarJustify() {
+  state.warJustifyTarget = null;
+  state.unVoteResult = null;
+  render();
+}
+
+// how a given permanent member of the Security Council leans on this specific war request
+function unMemberStance(member, legit) {
+  const memberRel = state.relations[member];
+  if (!memberRel) return "self"; // the player is this permanent member
+  if (memberRel.status === "جنگ") return "oppose"; // a member you're at war with will never bless your wars
+  let score = legit * 0.65 + memberRel.score * 0.35;
+  if (memberRel.status === "اتحاد") score += 15;
+  else if (memberRel.status === "تجارت") score += 6;
+  return score >= 45 ? "support" : "oppose";
+}
+
+function computeUNVote(country, reasonId) {
+  const reason = WAR_REASONS.find(x => x.id === reasonId);
+  const r = state.relations[country];
+  const legit = adjustedLegitimacy(reason, r);
+  // a permanent member does not vote on a case brought against itself
+  const voters = PERMANENT_MEMBERS.filter(m => m !== country);
+  const stances = voters.map(m => ({ member: m, stance: unMemberStance(m, legit) }));
+  const votingStances = stances.filter(s => s.stance !== "self");
+  const vetoedBy = votingStances.filter(s => s.stance === "oppose").map(s => s.member);
+  return { country, reasonId, legit, stances, approved: vetoedBy.length === 0, vetoedBy };
+}
+
+function requestUNVote(country, reasonId) {
+  const reason = WAR_REASONS.find(x => x.id === reasonId);
+  const r = state.relations[country];
+  if (!reason || !r) return;
+  if (!reason.available(country, r)) { flashMsg("امکان‌پذیر نیست", reason.unavailableHint || "این دلیل در شرایط فعلی در دسترس نیست.", "warn"); return render(); }
+  state.unVoteResult = computeUNVote(country, reasonId);
+  render();
+}
+
+function finalizeWar(country, reasonId) {
+  const reason = WAR_REASONS.find(x => x.id === reasonId);
+  const r = state.relations[country];
+  if (!reason || !r) return;
+
+  const legit = adjustedLegitimacy(reason, r);
+  r.status = "جنگ"; r.score = clamp(r.score - 30, 0, 100); r.warWins = 0; r.warTurns = 0;
+  state.warJustifyTarget = null;
+  state.unVoteResult = null;
+
+  const opinionDelta = Math.round((legit - 50) / 3);
+  state.worldOpinion = clamp(state.worldOpinion + opinionDelta, 0, 100);
+
+  if (legit < 35) {
+    state.unSanctionTurns = Math.max(state.unSanctionTurns, 8);
+    const others = Object.entries(state.relations).filter(([c2]) => c2 !== country && state.relations[c2].status !== "جنگ" && state.relations[c2].status !== "تحت سلطه");
+    others.forEach(([, r2]) => { r2.score = clamp(r2.score - (7 + Math.random() * 6), 0, 100); });
+    log(`⚔️ جنگ با ${country} با بهانه «${reason.name}» اعلام شد.`);
+    flashMsg("🇺🇳 محکومیت سازمان ملل", `توجیه شما برای این جنگ در نظر جامعه جهانی قانع‌کننده نبود. سازمان ملل قطعنامه محکومیت صادر کرد؛ افکار عمومی جهانی و روابط با سایر کشورها افت کرد و تحریم‌های اقتصادی برای ۸ نوبت اعمال می‌شود.`, "warn");
+    // a weakly-justified war can drag in a piling-on rival, not just diplomatic isolation
+    const joiners = others.filter(([, r2]) => r2.power > militaryPower() * 0.7);
+    if (joiners.length > 0 && Math.random() < 0.4) {
+      const [joinCountry, joinR] = joiners[Math.floor(Math.random() * joiners.length)];
+      joinR.status = "جنگ"; joinR.score = clamp(joinR.score - 15, 0, 100); joinR.warWins = 0; joinR.warTurns = 0;
+      log(`🌍 ${joinCountry} به دلیل محکومیت جهانی این جنگ، به‌طور رسمی وارد جبهه مقابل شما شد!`);
+    }
+  } else if (legit >= 65) {
+    const others = Object.entries(state.relations).filter(([c2]) => c2 !== country);
+    others.forEach(([, r2]) => { if (r2.status === "اتحاد" || r2.status === "تجارت") r2.score = clamp(r2.score + 4, 0, 100); });
+    state.coalitionBonusTurns = 5; // allies rally material support behind a war the world sees as legitimate
+    log(`⚔️ جنگ با ${country} با بهانه موجه «${reason.name}» اعلام شد.`);
+    flashMsg("🇺🇳 مشروعیت بین‌المللی", `سازمان ملل و بیشتر کشورهای جهان این جنگ را موجه دانستند. افکار عمومی جهانی نسبت به کشور شما بهبود یافت و متحدانتان تا ۵ نوبت پشتیبانی نظامی می‌فرستند.`);
+  } else {
+    log(`⚔️ جنگ با ${country} با بهانه «${reason.name}» اعلام شد. واکنش جهانی محتاطانه بود.`);
+  }
+  render();
+}
+
+function buildUNVotePanel(vote) {
+  const country = vote.country;
+  const reason = WAR_REASONS.find(x => x.id === vote.reasonId);
+  const c = cardEl("🇺🇳", `رأی‌گیری شورای امنیت: جنگ با ${country}`, vote.approved ? "#4caf7d" : "#c0453f");
+  const sub = document.createElement("div"); sub.className = "card-sub";
+  sub.textContent = `دلیل اعلام‌شده: ${reason.icon} ${reason.name} (مشروعیت ${Math.round(vote.legit)}/100)`;
+  c.appendChild(sub);
+
+  vote.stances.forEach(s => {
+    const row = document.createElement("div"); row.className = "country-row";
+    const flag = COUNTRIES.find(x => x.name === s.member)?.flag || "";
+    let label, color;
+    if (s.stance === "self") { label = "کشور تحت رهبری شما"; color = "#8a92a3"; }
+    else if (s.stance === "support") { label = "✅ موافق"; color = "#4caf7d"; }
+    else { label = "❌ مخالف (وتو)"; color = "#c0453f"; }
+    row.innerHTML = `<span>${flag} ${s.member}</span><span style="color:${color}; font-weight:700;">${label}</span>`;
+    c.appendChild(row);
+  });
+
+  const verdict = document.createElement("div"); verdict.className = "range-note"; verdict.style.margin = "8px 0";
+  verdict.style.color = vote.approved ? "#4caf7d" : "#c0453f";
+  verdict.textContent = vote.approved
+    ? "شورای امنیت مجوز این جنگ را صادر کرد."
+    : `${vote.vetoedBy.join(" و ")} با این جنگ مخالفت کرد؛ شما در حال حاضر حق اعلام رسمی این جنگ را ندارید.`;
+  c.appendChild(verdict);
+
+  if (vote.approved) {
+    const goBtn = document.createElement("button");
+    goBtn.className = "war-btn";
+    goBtn.innerHTML = "⚔️ اعلام رسمی جنگ";
+    goBtn.onclick = () => finalizeWar(country, vote.reasonId);
+    c.appendChild(goBtn);
+  }
+  const backBtn = document.createElement("button");
+  backBtn.className = "action-btn";
+  backBtn.style.cssText = "margin-top:6px; justify-content:center;";
+  backBtn.textContent = vote.approved ? "انصراف" : "بازگشت و انتخاب دلیل دیگر";
+  backBtn.onclick = () => { if (vote.approved) { cancelWarJustify(); } else { state.unVoteResult = null; render(); } };
+  c.appendChild(backBtn);
+
+  return c;
+}
+
+function buildWarJustifyPanel(country) {
+  if (state.unVoteResult && state.unVoteResult.country === country) return buildUNVotePanel(state.unVoteResult);
+  const r = state.relations[country];
+  const c = cardEl("⚖️", `توجیه اعلام جنگ: ${r.flag ? r.flag + " " : ""}${country}`, "#c0453f");
+  const sub = document.createElement("div"); sub.className = "card-sub";
+  sub.textContent = "پیش از اعلام جنگ، دلیل خود را برای افکار عمومی جهانی انتخاب کنید. سپس پرونده به شورای امنیت سازمان ملل ارجاع می‌شود؛ اگر آمریکا، روسیه یا چین با آن مخالفت کنند (وتو)، حق اعلام رسمی جنگ نخواهید داشت.";
+  c.appendChild(sub);
+
+  WAR_REASONS.forEach(reason => {
+    const ok = reason.available(country, r);
+    const legit = adjustedLegitimacy(reason, r);
+    const legitColor = legit >= 65 ? "#4caf7d" : legit >= 35 ? "#c9a24b" : "#c0453f";
+    const btn = document.createElement("button");
+    btn.className = "action-btn";
+    btn.style.cssText = "flex-direction:column; align-items:flex-start; gap:3px; height:auto; text-align:right;" + (ok ? "" : " opacity:0.45; cursor:not-allowed;");
+    btn.innerHTML = `<div style="display:flex; align-items:center; justify-content:space-between; width:100%;"><span>${reason.icon} ${reason.name}</span><span style="font-weight:700; color:${legitColor};">مشروعیت ${Math.round(legit)}</span></div><div style="font-size:11px; color:#8a92a3; font-weight:400;">${ok ? reason.desc : reason.unavailableHint || reason.desc}</div>`;
+    if (ok) btn.onclick = () => requestUNVote(country, reason.id);
+    else btn.disabled = true;
+    c.appendChild(btn);
+  });
+
+  const cancelBtn = document.createElement("button");
+  cancelBtn.className = "action-btn";
+  cancelBtn.style.cssText = "margin-top:6px; justify-content:center;";
+  cancelBtn.textContent = "انصراف";
+  cancelBtn.onclick = () => cancelWarJustify();
+  c.appendChild(cancelBtn);
+
+  return c;
+}
+
+function relationAction(country, kind) {
+  const r = state.relations[country];
+  if (kind === "strengthen") {
+    if (!spend(COSTS.strengthen)) return render();
+    r.score = clamp(r.score + 10, 0, 100);
+    log(`روابط با ${country} تقویت شد.`);
+  } else if (kind === "alliance") {
+    if (r.score < 60) { flashMsg("امکان‌پذیر نیست", `برای پیشنهاد اتحاد با ${country} باید امتیاز روابط حداقل ۶۰ باشد.`, "warn"); return render(); }
+    if (!spend(COSTS.alliance)) return render();
+    r.status = "اتحاد"; r.score = clamp(r.score + 5, 0, 100);
+    log(`پیمان اتحاد با ${country} امضا شد.`);
+  } else if (kind === "trade") {
+    if (r.score < 35) { flashMsg("امکان‌پذیر نیست", `روابط با ${country} برای قرارداد تجاری بسیار پایین است.`, "warn"); return render(); }
+    if (!spend(COSTS.trade)) return render();
+    r.status = "تجارت"; r.score = clamp(r.score + 3, 0, 100);
+    log(`قرارداد تجاری با ${country} منعقد شد. درآمد صادرات افزایش می‌یابد.`);
+  } else if (kind === "peace") {
+    if (!spend(COSTS.peace)) return render();
+    r.status = "خنثی"; r.score = clamp(r.score + 15, 0, 100); r.warWins = 0; r.warTurns = 0;
+    log(`آتش‌بس با ${country} برقرار شد.`);
+  } else if (kind === "annex") {
+    if (r.warWins < annexWinsNeeded(country)) { flashMsg("امکان‌پذیر نیست", `برای الحاق ${country} باید ابتدا در ${annexWinsNeeded(country)} نبرد پیروز شوید.`, "warn"); return render(); }
+    const cost = COSTS.annex;
+    if (!spend(cost)) return render();
+    const treasuryLoot = 1200 + Math.floor(Math.random() * 1400);
+    const popGain = +(2 + Math.random() * 5).toFixed(1);
+    const resourceRoll = Math.random();
+    let resourceMsg = "";
+    if (resourceRoll < 0.4) { state.oilFields++; resourceMsg = "یک منطقه نفت‌خیز"; }
+    else if (resourceRoll < 0.75) { state.factories++; resourceMsg = "چند کارخانه"; }
+    else { state.techLevel = clamp(state.techLevel + 4, 0, 100); resourceMsg = "دانش فنی"; }
+    state.treasury += treasuryLoot;
+    state.population = clamp(state.population + popGain, 1, 2000);
+    r.status = "تحت سلطه"; r.score = 100; r.warWins = 0; r.power = Math.round(r.power * 0.3); r.citiesCaptured = CITIES_PER_COUNTRY;
+    log(`🏴 سرزمین ${country} الحاق شد! غنیمت ${fmt(treasuryLoot)} میلیون دلار و ${resourceMsg} به دست آمد. اکنون این کشور هر نوبت به شما خراج می‌دهد.`);
+  } else if (kind === "sabotage") {
+    if (!spend(COSTS.sabotage)) return render();
+    const successChance = clamp(0.5 + state.techLevel / 300 - r.power / 500, 0.2, 0.85);
+    if (Math.random() < successChance) {
+      const loot = 300 + Math.floor(Math.random() * 400);
+      r.power = Math.max(10, Math.round(r.power * (0.85 - Math.random() * 0.1)));
+      state.treasury += loot;
+      log(`🕵️ عملیات خرابکارانه در ${country} با موفقیت انجام شد؛ زیرساخت‌های نظامی آن‌ها تضعیف شد و ${fmt(loot)} میلیون دلار غنیمت به دست آمد.`);
+    } else {
+      state.treasury -= 250;
+      r.score = clamp(r.score - 15, 0, 100);
+      log(`🕵️ عملیات خرابکارانه در ${country} لو رفت! روابط دوجانبه به‌شدت آسیب دید و ${fmt(250)} میلیون دلار هزینه شد.`);
+      if (r.status !== "جنگ" && Math.random() < 0.25) {
+        r.status = "جنگ"; r.warWins = 0; r.warTurns = 0;
+        log(`🚨 ${country} به دلیل عملیات لو رفته، رسماً اعلام جنگ داد!`);
+      }
+    }
+  } else if (kind === "blockade") {
+    if (state.ships < 3) { flashMsg("امکان‌پذیر نیست", "برای محاصره دریایی حداقل به ۳ ناو جنگی نیاز دارید.", "warn"); return render(); }
+    if (!spend(COSTS.blockade)) return render();
+    const successChance = clamp(0.35 + state.ships * 0.05 - r.power / 400, 0.15, 0.85);
+    if (Math.random() < successChance) {
+      const loot = 400 + Math.floor(Math.random() * 400);
+      state.treasury += loot;
+      r.score = clamp(r.score - 10, 0, 100);
+      r.blockadeTurns = 3;
+      log(`🚢 محاصره دریایی سواحل ${country} موفقیت‌آمیز بود؛ ${fmt(loot)} میلیون دلار از محموله‌های توقیف‌شده به دست آمد و اقتصاد آن‌ها تا ۳ نوبت مختل می‌شود.`);
+    } else {
+      const lostShip = Math.random() < 0.5;
+      if (lostShip) state.ships = Math.max(0, state.ships - 1);
+      state.treasury -= 300;
+      r.score = clamp(r.score - 5, 0, 100);
+      log(`🚢 محاصره دریایی ${country} با شکست مواجه شد${lostShip ? "؛ یک ناو جنگی از دست رفت" : ""} و ۳۰۰ میلیون دلار هزینه شد.`);
+      if (r.status !== "جنگ" && Math.random() < 0.2) {
+        r.status = "جنگ"; r.warWins = 0; r.warTurns = 0;
+        log(`🚨 ${country} پس از شکست محاصره دریایی، اعلام جنگ داد!`);
+      }
+    }
+  } else if (kind === "incite") {
+    if (r.status === "تحت سلطه") { flashMsg("امکان‌پذیر نیست", "این سرزمین از قبل تحت سلطه شماست.", "warn"); return render(); }
+    if (!spend(COSTS.incite)) return render();
+    // hostile, low-trust populations are easier to stir up than friendly ones
+    const successChance = clamp(0.4 + (50 - r.score) / 200 + state.techLevel / 400, 0.15, 0.75);
+    if (Math.random() < successChance) {
+      r.rebellion = (r.rebellion || 0) + 4;
+      state.rebellionsIncited = (state.rebellionsIncited || 0) + 1;
+      log(`🔥 گروه‌های نیابتی و شورشیان مسلح در ${country} با حمایت پنهانی شما بسیج شدند؛ قدرت آن‌ها طی چند نوبت آینده کاهش می‌یابد.`);
+    } else {
+      log(`🔥 تلاش برای سازماندهی شورش در ${country} ناکام ماند و منابع مالی هدر رفت.`);
+      if (Math.random() < 0.25) {
+        r.score = clamp(r.score - 18, 0, 100);
+        log(`🕵️ دخالت شما در امور داخلی ${country} افشا شد؛ روابط دوجانبه به‌شدت آسیب دید.`);
+      }
+    }
+  }
+  render();
+}
+
+// ---------- proxy rebellions: resolved once per turn, independent of direct war ----------
+function resolveRebellions() {
+  Object.entries(state.relations).forEach(([country, r]) => {
+    if ((r.rebellion || 0) > 0) {
+      r.power = Math.max(10, Math.round(r.power * (0.90 - Math.random() * 0.05)));
+      r.rebellion--;
+      if (r.rebellion === 0) log(`🔥 موج شورش نیابتی در ${country} فروکش کرد.`);
+      else if (Math.random() < 0.4) log(`🔥 درگیری‌های داخلی شورشیان در ${country} همچنان ادامه دارد؛ قدرت نظامی آن‌ها تضعیف شده است.`);
+    }
+  });
+}
+
+// ---------- national focuses ----------
+function startFocus(id) {
+  const f = FOCUS_TREE.find(x => x.id === id);
+  if (!f) return;
+  if (state.activeFocus) { flashMsg("امکان‌پذیر نیست", "یک کانون ملی هم‌اکنون در حال پیشرفت است.", "warn"); return render(); }
+  if (state.completedFocuses.includes(id)) return render();
+  if (f.requires.some(r => !state.completedFocuses.includes(r))) { flashMsg("امکان‌پذیر نیست", "ابتدا باید کانون‌های پیش‌نیاز را تکمیل کنید.", "warn"); return render(); }
+  if (f.minTech && state.techLevel < f.minTech) { flashMsg("امکان‌پذیر نیست", `سطح فناوری باید حداقل ${f.minTech} باشد.`, "warn"); return render(); }
+  if (!spend(f.cost)) return render();
+  state.activeFocus = { id, turnsLeft: f.turns };
+  log(`🎯 کانون ملی «${f.name}» آغاز شد (${f.turns} نوبت طول می‌کشد).`);
+  render();
+}
+
+// ---------- laws ----------
+function passLaw(id) {
+  const lawItem = LAWS.find(x => x.id === id);
+  if (!lawItem) return;
+  if (state.enactedLaws.includes(id)) return render();
+  if (lawItem.minTech && state.techLevel < lawItem.minTech) { flashMsg("امکان‌پذیر نیست", `سطح فناوری باید حداقل ${lawItem.minTech} باشد.`, "warn"); return render(); }
+  if (!spend(lawItem.cost)) return render();
+  const chance = clamp(0.55 + (state.happiness - 50) / 250, 0.25, 0.9);
+  if (Math.random() < chance) {
+    lawItem.effect(state);
+    state.enactedLaws.push(id);
+    log(`⚖️ لایحه «${lawItem.name}» در مجلس به تصویب رسید.`);
+  } else {
+    state.happiness = clamp(state.happiness - 2, 0, 100);
+    log(`🚫 لایحه «${lawItem.name}» در مجلس رأی نیاورد و رد شد.`);
+  }
+  render();
+}
+
+// ---------- random events ----------
+function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function triggerRandomEvent() {
+  const candidates = ["earthquake", "flood", "mine", "crisis", "disease", "trade_windfall", "science_breakthrough", "national_holiday"];
+  if (state.techLevel >= 30) candidates.push("cyberattack");
+  if (state.population >= 60) candidates.push("refugee_wave");
+  if (state.happiness < 50) candidates.push("protest", "protest", "protest");
+  const warEnemies = Object.entries(state.relations).filter(([, r]) => r.status === "جنگ");
+  if (warEnemies.length > 0) candidates.push("sabotage", "sabotage");
+  // gather EVERY qualifying country, not just the first one found — otherwise the same
+  // nation gets picked for these events turn after turn whenever more than one qualifies
+  const neutralGoodCandidates = Object.entries(state.relations).filter(([, r]) => r.status === "خنثی" && r.score >= 45);
+  if (neutralGoodCandidates.length > 0) candidates.push("alliance_offer", "trade_offer");
+  const allyCandidates = Object.entries(state.relations).filter(([, r]) => r.status === "اتحاد" || r.status === "تجارت");
+  if (allyCandidates.length > 0) candidates.push("betrayal", "betrayal");
+  const kind = pickRandom(candidates);
+
+  if (kind === "earthquake") {
+    const dmg = 300 + Math.floor(Math.random() * 500);
+    state.treasury -= dmg; state.happiness = clamp(state.happiness - 5, 0, 100);
+    if (Math.random() < 0.3 && state.roads > 10) state.roads = clamp(state.roads - 10, 0, 100);
+    log(`🌍 زلزله‌ای کشور را لرزاند؛ خسارت ${fmt(dmg)} میلیون دلار به بار آمد.`);
+  } else if (kind === "flood") {
+    const dmg = 200 + Math.floor(Math.random() * 400);
+    state.treasury -= dmg; state.roads = clamp(state.roads - 8, 0, 100); state.happiness = clamp(state.happiness - 3, 0, 100);
+    log(`🌊 سیل مناطقی از کشور را درنوردید؛ خسارت ${fmt(dmg)} میلیون دلار.`);
+  } else if (kind === "protest") {
+    state.happiness = clamp(state.happiness - 8, 0, 100); state.unemployment = clamp(state.unemployment + 1, 0, 100);
+    log("📢 اعتراضات مردمی به دلیل نارضایتی عمومی در چند شهر شکل گرفت.");
+  } else if (kind === "mine") {
+    const bonus = 900 + Math.floor(Math.random() * 1200);
+    state.treasury += bonus;
+    log(`⛏️ معدن جدیدی کشف شد! ${fmt(bonus)} میلیون دلار به خزانه افزوده شد.`);
+  } else if (kind === "crisis") {
+    state.crisisTurns = 3; state.treasury -= 800;
+    log("📉 بحران اقتصادی جهانی به کشور رسید؛ درآمدها تا سه نوبت کاهش می‌یابد.");
+  } else if (kind === "disease") {
+    const mitig = clamp(state.hospitals * 3, 0, 15);
+    state.health = clamp(state.health - (12 - mitig), 0, 100);
+    state.happiness = clamp(state.happiness - (6 - mitig / 2), 0, 100);
+    log(state.hospitals > 2
+      ? "🦠 شیوع یک بیماری گزارش شد، اما شبکه بیمارستانی کشور اثرات آن را محدود کرد."
+      : "🦠 شیوع بیماری در کشور گزارش شد؛ نظام سلامت تحت فشار قرار گرفت.");
+  } else if (kind === "trade_windfall") {
+    const traders = Object.values(state.relations).filter(r => r.status === "تجارت" || r.status === "اتحاد").length;
+    const bonus = 300 + traders * 250 + Math.floor(Math.random() * 300);
+    state.treasury += bonus;
+    log(traders > 0
+      ? `📦 یک فرصت تجاری بزرگ پیش آمد؛ شرکای تجاری شما ${fmt(bonus)} میلیون دلار سود به همراه آورد.`
+      : `📦 یک محموله صادراتی غیرمنتظره ${fmt(bonus)} میلیون دلار سود آورد.`);
+  } else if (kind === "science_breakthrough") {
+    const bonus = 2 + Math.floor(Math.random() * 4) + Math.floor(state.universities / 2);
+    state.techLevel = clamp(state.techLevel + bonus, 0, 100);
+    log(`🔭 دانشمندان کشور به یک کشف علمی مهم دست یافتند؛ سطح فناوری ${bonus} واحد افزایش یافت.`);
+  } else if (kind === "national_holiday") {
+    state.happiness = clamp(state.happiness + (3 + Math.floor(Math.random() * 4)), 0, 100);
+    log("🎉 جشن ملی با استقبال گسترده مردم برگزار شد؛ رضایت عمومی افزایش یافت.");
+  } else if (kind === "cyberattack") {
+    const dmg = 250 + Math.floor(Math.random() * 350);
+    const mitig = state.techLevel >= 60;
+    state.treasury -= mitig ? Math.round(dmg * 0.4) : dmg;
+    if (!mitig) state.techLevel = clamp(state.techLevel - 3, 0, 100);
+    log(mitig
+      ? `💻 یک حمله سایبری خنثی شد؛ زیرساخت‌های دیجیتال پیشرفته خسارت را محدود کردند (${fmt(Math.round(dmg * 0.4))} میلیون دلار).`
+      : `💻 یک حمله سایبری ناشناس زیرساخت‌های حیاتی را مختل کرد؛ خسارت ${fmt(dmg)} میلیون دلار و افت جزئی سطح فناوری.`);
+  } else if (kind === "refugee_wave") {
+    const popGain = +(0.3 + Math.random() * 0.8).toFixed(1);
+    const strain = clamp(4 - state.hospitals * 0.4, 0.5, 4);
+    state.population = clamp(state.population + popGain, 1, 2000);
+    state.happiness = clamp(state.happiness - strain, 0, 100);
+    state.unemployment = clamp(state.unemployment + 0.8, 0, 100);
+    log(`🧳 موج مهاجرت از مناطق ناآرام همسایه کشور شما را هدف قرار داد؛ جمعیت افزایش یافت اما فشار بر خدمات عمومی رضایت را ${strain < 2 ? "اندکی" : "محسوس"} کاهش داد.`);
+  } else if (kind === "sabotage") {
+    const enemy = warEnemies.length > 0 ? pickRandom(warEnemies)[0] : null;
+    const dmg = 150 + Math.floor(Math.random() * 350);
+    state.treasury -= dmg;
+    const lostTank = state.tanks > 0 && Math.random() < 0.4;
+    if (lostTank) state.tanks--;
+    log(`🕵️ عملیات خرابکارانه‌ای از سوی ${enemy || "دشمن"} زیرساخت‌های شما را هدف قرار داد؛ خسارت ${fmt(dmg)} میلیون دلار${lostTank ? " و از دست رفتن یک دسته تانک" : ""}.`);
+  } else if (kind === "alliance_offer") {
+    const [country, r] = pickRandom(neutralGoodCandidates);
+    r.score = clamp(r.score + 22, 0, 100);
+    if (r.score >= 65 && Math.random() < 0.5) {
+      r.status = "اتحاد";
+      log(`🤝 ${country} به‌طور غیرمنتظره پیشنهاد اتحاد داد و پیمان بی‌درنگ امضا شد!`);
+    } else {
+      log(`🤝 ${country} پیام دوستانه‌ای فرستاد و خواستار نزدیکی روابط شد (امتیاز روابط افزایش یافت).`);
+    }
+  } else if (kind === "trade_offer") {
+    const [country, r] = pickRandom(neutralGoodCandidates);
+    r.score = clamp(r.score + 15, 0, 100);
+    if (r.score >= 40 && Math.random() < 0.5 && r.status === "خنثی") {
+      r.status = "تجارت";
+      log(`🚢 ${country} به‌طور غیرمنتظره یک قرارداد تجاری رایگان پیشنهاد داد و پذیرفته شد!`);
+    } else {
+      log(`🚢 ${country} خواستار گسترش تجارت شد (امتیاز روابط افزایش یافت).`);
+    }
+  } else if (kind === "betrayal") {
+    const [country, r] = pickRandom(allyCandidates);
+    const wasAlliance = r.status === "اتحاد";
+    r.score = clamp(r.score - 25, 0, 100);
+    r.status = "خنثی";
+    log(`🗡️ ${country} ${wasAlliance ? "پیمان اتحاد" : "قرارداد تجاری"} را یک‌طرفه لغو کرد؛ روابط دوجانبه سرد شد.`);
+  }
+}
+
+// ---------- nuclear strike ----------
+// only usable against a country you're currently at war with, and only while warheads remain
+// in the stockpile. Devastates the target's power and territory instantly but carries severe,
+// permanent diplomatic and economic fallout — and a real (if usually small) chance the target
+// secretly had its own capability and strikes back.
+function canNuke(country) {
+  const r = state.relations[country];
+  return !!(state.hasNuclearWeapon && (state.nuclearWarheads || 0) > 0 && r && r.status === "جنگ");
+}
+
+function nuclearStrike(country) {
+  if (!canNuke(country)) return render();
+  showConfirmModal(
+    `☢️ حمله هسته‌ای به ${country}`,
+    "این اقدام غیرقابل بازگشت است: شهرهای هدف ویران می‌شوند، اما افکار عمومی جهانی سقوط می‌کند، تحریم‌های شدید اعمال می‌شود و احتمال کمی وجود دارد که هدف پاسخ متقابل هسته‌ای بدهد. آیا مطمئن هستید؟",
+    () => executeNuclearStrike(country)
+  );
+}
+
+function executeNuclearStrike(country) {
+  if (!canNuke(country)) return render();
+  const r = state.relations[country];
+  state.nuclearWarheads--;
+
+  const isPermanent = PERMANENT_MEMBERS.includes(country);
+  r.power = Math.max(5, Math.round(r.power * 0.25));
+  const citiesHit = clamp(2 + Math.floor(Math.random() * 2), 0, CITIES_PER_COUNTRY - (r.citiesCaptured || 0));
+  r.citiesCaptured = clamp((r.citiesCaptured || 0) + citiesHit, 0, CITIES_PER_COUNTRY);
+  r.warWins = (r.warWins || 0) + 2;
+  r.score = 0;
+
+  const opinionHit = isPermanent ? 55 : 40;
+  state.worldOpinion = clamp(state.worldOpinion - opinionHit, 0, 100);
+  state.unSanctionTurns = Math.max(state.unSanctionTurns, 12);
+  state.happiness = clamp(state.happiness - 10, 0, 100);
+  state.treasury -= 1800;
+  Object.entries(state.relations).forEach(([c2, r2]) => {
+    if (c2 === country || r2.status === "تحت سلطه") return;
+    r2.score = clamp(r2.score - (isPermanent ? 30 : 18) - Math.random() * 10, 0, 100);
+  });
+
+  log(`☢️ کشور شما کلاهک هسته‌ای بر ${country} فرود آورد! ${fmt(citiesHit)} شهر ویران و قدرت نظامی آن‌ها به‌شدت فروپاشید (کلاهک باقی‌مانده: ${fmt(state.nuclearWarheads)}).`);
+  flashMsg("☢️ حمله هسته‌ای انجام شد", "افکار عمومی جهانی سقوط کرد، تحریم‌های شدید سازمان ملل اعمال شد و روابط شما با تقریباً همهٔ کشورهای جهان به‌شدت آسیب دید.", "warn");
+
+  // small, power-scaled chance the target had a hidden retaliatory capability
+  const retaliateChance = clamp(r.power / 900 + (isPermanent ? 0.25 : 0.05), 0.03, 0.5);
+  if (Math.random() < retaliateChance) {
+    state.treasury -= 2200 + Math.floor(Math.random() * 1200);
+    state.happiness = clamp(state.happiness - 18, 0, 100);
+    state.soldiers = Math.max(1000, Math.round(state.soldiers * 0.6));
+    state.tanks = Math.max(0, Math.round(state.tanks * 0.6));
+    state.jets = Math.max(0, Math.round(state.jets * 0.6));
+    state.ships = Math.max(0, Math.round(state.ships * 0.6));
+    log(`☢️ ${country} با یک ضربه متقابل هسته‌ای پنهانی پاسخ داد! خسارات نظامی و اقتصادی سنگینی به کشور شما وارد شد.`);
+    flashMsg("☢️ پاسخ متقابل هسته‌ای", `برخلاف تصور، ${country} به کلاهک‌های هسته‌ای پنهانی دسترسی داشت و ضربه‌ای متقابل وارد کرد.`, "warn");
+  }
+  render();
+}
+
+function resolveWars() {
+  // temporary edge from allies who rallied to a war the world saw as legitimate
+  const coalitionBonus = state.coalitionBonusTurns > 0 ? militaryPower() * 0.15 : 0;
+  Object.entries(state.relations).forEach(([country, r]) => {
+    if ((r.blockadeTurns || 0) > 0) r.blockadeTurns--;
+    if (r.status === "جنگ") {
+      r.warTurns = (r.warTurns || 0) + 1;
+      const fatigue = clamp(r.warTurns * 0.6, 0, 14); // prolonged wars grind you down harder each turn they drag on
+      const ourPower = militaryPower() + coalitionBonus + Math.random() * 10;
+      const theirPower = r.power + Math.random() * 10;
+      const weWon = ourPower >= theirPower;
+      const lossFactor = (weWon ? 0.035 : 0.10) + fatigue * 0.003;
+      state.soldiers = Math.max(1000, Math.round(state.soldiers * (1 - lossFactor)));
+      if (!weWon && state.tanks > 0 && Math.random() < 0.35) state.tanks--;
+      if (!weWon && state.artillery > 0 && Math.random() < 0.3) state.artillery--;
+      if (!weWon && state.jets > 0 && Math.random() < 0.15) state.jets--;
+      state.treasury -= (350 + Math.floor(Math.random() * 400) + fatigue * 15);
+      state.happiness = clamp(state.happiness - (3 + fatigue * 0.35), 0, 100);
+      if (weWon) {
+        r.warWins = (r.warWins || 0) + 1;
+        state._wonWarThisTurn = true;
+        if ((r.citiesCaptured || 0) < CITIES_PER_COUNTRY) {
+          r.citiesCaptured = (r.citiesCaptured || 0) + 1;
+          log(`🏙️ یکی از شهرهای ${country} تصرف شد (${r.citiesCaptured}/${CITIES_PER_COUNTRY} — روی نقشه به رنگ زرد درآمد).`);
+        }
+        if (r.warWins >= annexWinsNeeded(country)) {
+          log(`🎖️ ارتش شما در نبردها بر ${country} چیره شد؛ اکنون امکان الحاق سرزمین آن‌ها فراهم است.`);
+        } else if (Math.random() < 0.18) {
+          r.score = clamp(r.score + 8, 0, 100);
+          log(`🏳️ پیروزی در نبردها، ${country} خواستار آتش‌بس است (پیشنهاد صلح در دیپلماسی موجود است).`);
+        } else {
+          log(`⚔️ پیروزی در نبرد با ${country}؛ نبرد ادامه دارد (${r.warWins}/${annexWinsNeeded(country)} پیروزی برای الحاق).`);
+        }
+      } else {
+        r.warWins = 0;
+        log(`⚔️ شکست در نبرد با ${country}؛ تلفات و هزینه‌های جنگی سنگین وارد شد${fatigue > 4 ? " — خستگی طولانی جنگ اوضاع را بدتر کرده است" : ""}.`);
+      }
+    } else if (r.status !== "تحت سلطه") {
+      // rival nations keep developing over time, and faster than before — the game gets harder as it goes on
+      // a naval blockade sharply slows a rival's development while it's in effect
+      const growthMultiplier = (r.blockadeTurns || 0) > 0 ? 0.3 : 1;
+      r.power = clamp(r.power + (1.6 + Math.random() * 2.8 + state.turn * 0.14) * growthMultiplier, 10, 380);
+      // a country only strikes first after a real pattern of hostility (very low relations, not just lukewarm ones),
+      // once it's clearly strong enough to expect victory, and never in the first few turns of the game
+      if (state.turn >= 5 && r.score < 20 && r.power > militaryPower() * 1.35 && Math.random() < 0.06) {
+        r.status = "جنگ"; r.score = clamp(r.score - 20, 0, 100); r.warWins = 0; r.warTurns = 0;
+        state.worldOpinion = clamp(state.worldOpinion + 4, 0, 100); // the world sympathizes with the country attacked without provocation
+        log(`🚨 ${country} پس از ماه‌ها تیرگی روابط، به‌طور غافلگیرانه به کشور شما اعلام جنگ داد! افکار عمومی جهانی به نفع شما تغییر کرد.`);
+      }
+      r.warTurns = 0;
+    }
+  });
+  if (state.coalitionBonusTurns > 0) state.coalitionBonusTurns--;
+}
+
+// ---------- achievements ----------
+function checkAchievements() {
+  if (!Array.isArray(state.unlockedAchievements)) state.unlockedAchievements = [];
+  let unlockedAny = false;
+  ACHIEVEMENTS.forEach(a => {
+    if (state.unlockedAchievements.includes(a.id)) return;
+    if (a.check(state)) {
+      state.unlockedAchievements.push(a.id);
+      unlockedAny = true;
+      log(`🏆 دستاورد جدید: «${a.name}» — ${a.desc}`);
+    }
+  });
+  if (unlockedAny) flashMsg("🏆 دستاورد جدید کسب شد!", "برای مشاهده جزئیات به تب «دستاوردها» سر بزنید.");
+}
+
+// ---------- leadership generations: aging + succession ----------
+function pickHeirs() {
+  return [0, 1, 2].map(() => {
+    const heir = generateLeader(30, 50);
+    return heir;
+  });
+}
+function chooseHeir(idx) {
+  if (!state.pendingSuccession || !state.pendingSuccession[idx]) return;
+  const heir = state.pendingSuccession[idx];
+  if (state.leader) state.leaderHistory.push(state.leader);
+  state.leader = heir;
+  state.pendingSuccession = null;
+  const style = LEADER_STYLES.find(x => x.id === heir.styleId);
+  // each leadership style brings a small one-time inauguration bonus reflecting their background
+  if (style.id === "general") { state.soldiers += 10000; state.tanks += 2; }
+  else if (style.id === "economist") { state.treasury += 700; }
+  else if (style.id === "diplomat") { Object.values(state.relations).forEach(r => { if (r.status !== "جنگ") r.score = clamp(r.score + 5, 0, 100); }); }
+  else if (style.id === "populist") { state.happiness = clamp(state.happiness + 10, 0, 100); }
+  log(`👑 ${heir.name} (${style.icon} ${style.name}) رهبری کشور را در سن ${heir.age} سالگی بر عهده گرفت.`);
+  flashMsg("👑 رهبر جدید", `${heir.name} با سبک رهبری «${style.name}» زمام امور را در دست گرفت.`);
+  render();
+}
+
+// ---------- AI progression ----------
+// gives every rival nation a chance, each turn, to visibly act on its own — modernizing its
+// army, having an economic boom, suffering unrest, or even going to war with another AI
+// country — on top of the steady background power growth already applied in resolveWars().
+// This is flavor + a modest power delta layered on top of that baseline, not a replacement
+// for it, so overall pacing/difficulty is unchanged; it just becomes visible in the log.
+const AI_PROGRESS_EVENTS = [
+  { weight: 3, run: (name, r) => {
+      const gain = 6 + Math.random() * 9;
+      r.power = clamp(r.power + gain, 10, 380);
+      log(`🌍 ${name} ارتش خود را نوسازی کرد و قدرت نظامی‌اش افزایش یافت.`);
+    } },
+  { weight: 3, run: (name, r) => {
+      const gain = 4 + Math.random() * 7;
+      r.power = clamp(r.power + gain, 10, 380);
+      r.score = clamp(r.score + 3, 0, 100);
+      log(`🌍 ${name} یک جهش اقتصادی را تجربه کرد و در صحنه جهانی معتبرتر شد.`);
+    } },
+  { weight: 2, run: (name, r) => {
+      const gain = 5 + Math.random() * 8;
+      r.power = clamp(r.power + gain, 10, 380);
+      log(`🌍 ${name} در فناوری نظامی پیشرفت چشمگیری داشت.`);
+    } },
+  { weight: 2, run: (name, r) => {
+      const loss = 5 + Math.random() * 10;
+      r.power = clamp(r.power - loss, 10, 380);
+      r.score = clamp(r.score - 3, 0, 100);
+      log(`🌍 ${name} دچار ناآرامی داخلی و بحران سیاسی شد؛ قدرت نظامی‌اش کاهش یافت.`);
+    } },
+  { weight: 2, run: (name, r) => {
+      if (r.score >= 45) return;
+      r.score = clamp(r.score + 7, 0, 100);
+      log(`🌍 ${name} با گسترش دیپلماسی فعال، جایگاه بین‌المللی خود را بهبود بخشید.`);
+    } },
+];
+
+function aiWorldProgress() {
+  const eligible = Object.entries(state.relations).filter(([, r]) => r.status !== "جنگ" && r.status !== "تحت سلطه");
+  eligible.forEach(([name, r]) => {
+    if (Math.random() < 0.16) {
+      const totalWeight = AI_PROGRESS_EVENTS.reduce((sum, e) => sum + e.weight, 0);
+      let roll = Math.random() * totalWeight;
+      for (const evt of AI_PROGRESS_EVENTS) {
+        roll -= evt.weight;
+        if (roll <= 0) { evt.run(name, r); break; }
+      }
+    }
+  });
+  // occasionally two rival nations clash with each other, entirely independent of the player
+  if (eligible.length >= 2 && Math.random() < 0.1) {
+    const shuffled = [...eligible].sort(() => Math.random() - 0.5);
+    const [nameA, rA] = shuffled[0];
+    const [nameB, rB] = shuffled[1];
+    const aWins = (rA.power + Math.random() * 15) >= (rB.power + Math.random() * 15);
+    const [winnerName, winnerR, loserName, loserR] = aWins ? [nameA, rA, nameB, rB] : [nameB, rB, nameA, rA];
+    winnerR.power = clamp(winnerR.power + 4 + Math.random() * 6, 10, 380);
+    loserR.power = clamp(loserR.power - (8 + Math.random() * 10), 10, 380);
+    log(`🌍 درگیری میان ${nameA} و ${nameB} درگرفت: ${winnerName} پیروز شد و نفوذ منطقه‌ای‌اش افزایش یافت، در حالی که ${loserName} تضعیف شد.`);
+  }
+}
+
+function endTurn() {
+  if (state.gameOver) return;
+  // if a succession was pending and the player never picked from the "رهبری" tab, auto-pick
+  // the first heir so the game never silently stalls
+  if (state.pendingSuccession) chooseHeir(0);
+  state._wonWarThisTurn = false;
+  const bd = incomeBreakdown();
+  let netIncome = bd.netIncome + (Math.random() - 0.5) * 40; // small variance vs. forecast
+  if (state.crisisTurns > 0) { state.crisisTurns--; }
+  state.treasury += netIncome;
+
+  const growth = state.population * (0.012 + state.health / 3000 - (state.happiness < 30 ? 0.006 : 0));
+  state.population = clamp(state.population + growth, 1, 2000);
+
+  const happinessTarget = clamp(68 - state.taxRate * 0.5 - state.unemployment * 0.7 + state.health * 0.18 + state.education * 0.12, 0, 100);
+  state.happiness = clamp(state.happiness + (happinessTarget - state.happiness) * 0.15, 0, 100);
+
+  const unemploymentTarget = clamp(20 - state.factories * 1.4 - state.universities * 0.9 - state.roads * 0.05, 2, 60);
+  state.unemployment = clamp(state.unemployment + (unemploymentTarget - state.unemployment) * 0.15, 2, 60);
+
+  // prolonged wars and UN sanctions drive prices up, quietly eating into upkeep costs over time
+  const atWarCount = Object.values(state.relations).filter(r => r.status === "جنگ").length;
+  state.inflation = clamp(state.inflation + 0.25 + atWarCount * 0.35 + (state.unSanctionTurns > 0 ? 0.4 : 0), 0, 60);
+
+  resolveWars();
+  resolveRebellions();
+  aiWorldProgress();
+
+  // --- resources: light stockpile drift + shortage effects ---
+  if (!state.resources) state.resources = { oil: 60, food: 60, tech: 40 };
+  state.resources.oil = clamp(state.resources.oil + (state.oilFields * 1.5 - state.factories * 0.8), 0, 300);
+  state.resources.food = clamp(state.resources.food + (3 - state.population * 0.03), 0, 300);
+  state.resources.tech = clamp(state.resources.tech + (state.universities * 0.5 - 0.3), 0, 300);
+  if (state.resources.food < 15) { state.happiness = clamp(state.happiness - 3, 0, 100); log("🌾 کمبود ذخایر غذایی رضایت عمومی را کاهش داد."); }
+  if (state.resources.tech >= 180 && Math.random() < 0.15) { state.techLevel = clamp(state.techLevel + 3, 0, 100); state.resources.tech -= 40; log("🔬 ذخیره بزرگ منابع فناوری به یک جهش علمی کوچک انجامید."); }
+
+  // --- diplomatic peace streak, tracked for the "صد نوبت بدون جنگ" achievement ---
+  const anyWarNow = Object.values(state.relations).some(r => r.status === "جنگ");
+  state.peaceStreak = anyWarNow ? 0 : (state.peaceStreak || 0) + 1;
+
+  if (state.unSanctionTurns > 0) state.unSanctionTurns--;
+  state.worldOpinion = clamp(state.worldOpinion + (58 - state.worldOpinion) * 0.06, 0, 100);
+  if (Math.random() < 0.5) triggerRandomEvent();
+
+  if (state.activeFocus) {
+    state.activeFocus.turnsLeft--;
+    if (state.activeFocus.turnsLeft <= 0) {
+      const f = FOCUS_TREE.find(x => x.id === state.activeFocus.id);
+      if (f) { f.effect(state); state.completedFocuses.push(f.id); log(`✅ کانون ملی «${f.name}» تکمیل شد.`); }
+      state.activeFocus = null;
+    }
+  }
+
+  state.turn++; state.year++;
+
+  // --- leadership generations: leader ages every turn; old age can trigger succession ---
+  if (state.leader) {
+    state.leader.age++;
+    if (!state.pendingSuccession && (state.leader.age >= 80 || (state.leader.age >= 65 && Math.random() < 0.03))) {
+      state.pendingSuccession = pickHeirs();
+      log(`👑 ${state.leader.name} به دلیل کهولت سن از قدرت کناره‌گیری کرد.`);
+      flashMsg("👑 جانشینی رهبری", "وارث بعدی را از تب «رهبری» انتخاب کنید؛ در غیر این صورت یک وارث پیش‌فرض در نوبت بعد انتخاب می‌شود.", "warn");
+    }
+  }
+
+  checkAchievements();
+
+  // --- general loyalty: fighting without wins (or an empty treasury) erodes trust in command;
+  // real wins and peacetime let it recover. If it bottoms out for too long, the army moves against you.
+  const activeWars = Object.values(state.relations).filter(r => r.status === "جنگ").length;
+  if (activeWars > 0) {
+    state.generalLoyalty = clamp(state.generalLoyalty + (state._wonWarThisTurn ? 6 : -(3 + activeWars * 1.5)), 0, 100);
+  } else {
+    state.generalLoyalty = clamp(state.generalLoyalty + 2, 0, 100);
+  }
+  if (state.treasury < 0) state.generalLoyalty = clamp(state.generalLoyalty - 4, 0, 100);
+  state.coupWarningTurns = state.generalLoyalty <= 12 ? state.coupWarningTurns + 1 : 0;
+
+  if (state.happiness <= 4) state.gameOver = "lose_happiness";
+  else if (state.treasury < -3000) state.gameOver = "lose_money";
+  else if (state.coupWarningTurns >= 2) { state.gameOver = "lose_coup"; log("⚔️ ژنرالان ارتش که دیگر به رهبری شما اعتماد نداشتند، علیه دولت کودتا کردند."); }
+  else if (powerScore() >= 96 && state.turn >= 30 && Object.values(state.relations).every(r => r.status !== "جنگ")) state.gameOver = "win";
+
+  // --- advisor: resolve old advice against what actually happened, then brief on anything new ---
+  evaluateAdvisorMemory();
+  if (!state.gameOver) {
+    generateProactiveBriefing().forEach(n => {
+      if (state.advisorMemory.some(m => m.key === n.key && !m.resolved)) return; // already warned, still open
+      advisorMessages.push({ role: "advisor-alert", content: n.text });
+      state.advisorMemory.push({ turn: state.turn, key: n.key, text: n.text, meta: n.meta || {}, resolved: false, followed: null });
+    });
+    state.advisorMemory = state.advisorMemory.slice(-30);
+  } else if (!state.recapShown) {
+    const recap = buildAdvisorRecap();
+    if (recap) advisorMessages.push({ role: "advisor-alert", content: "🎞️ مرور تصمیمات (حافظه بلندمدت مشاور):\n\n" + recap });
+    state.recapShown = true;
+  }
+
+  render();
+}
+
+
+function renderCountryPicker() {
+  document.getElementById("seal").textContent = "🌍";
+  document.getElementById("seal").style.borderColor = "#c9a24b";
+  document.getElementById("seal").style.boxShadow = "none";
+  document.getElementById("rankLabel").textContent = "یک کشور را برای رهبری انتخاب کنید";
+  document.getElementById("rankLabel").style.color = "#c9a24b";
+  document.getElementById("statYear").textContent = "—";
+  document.getElementById("statTreasury").textContent = "—";
+  document.getElementById("statTreasury").style.color = "";
+  document.getElementById("statPopulation").textContent = "—";
+  document.getElementById("statHappiness").textContent = "—";
+  document.getElementById("statHappiness").style.color = "";
+  document.getElementById("powerBar").style.width = "0%";
+  document.getElementById("endTurnBtn").disabled = true;
+  document.getElementById("tabs").innerHTML = "";
+  document.getElementById("flashArea").innerHTML = "";
+  document.getElementById("gameOverArea").innerHTML = "";
+
+  const tabContent = document.getElementById("tabContent");
+  tabContent.innerHTML = "";
+
+  // mode toggle: single-player vs local hotseat (pass-and-play on the same device)
+  if (hotseatSetupStage === 0) {
+    const modeCard = cardEl("🎮", "حالت بازی", "#c9a24b");
+    const modeRow = document.createElement("div"); modeRow.className = "grid2";
+    const soloBtn = document.createElement("button");
+    soloBtn.className = "action-btn"; soloBtn.style.justifyContent = "center";
+    soloBtn.innerHTML = "<span>👤 تک‌نفره</span>";
+    soloBtn.onclick = () => render();
+    const hotBtn = document.createElement("button");
+    hotBtn.className = "action-btn"; hotBtn.style.justifyContent = "center";
+    hotBtn.innerHTML = "<span>🎮 دو نفره (Hotseat روی یک دستگاه)</span>";
+    hotBtn.onclick = () => startHotseatSetup();
+    modeRow.appendChild(soloBtn); modeRow.appendChild(hotBtn);
+    modeCard.appendChild(modeRow);
+    tabContent.appendChild(modeCard);
+  }
+
+  const c = cardEl("🌍", "انتخاب کشور", "#c9a24b");
+  const sub = document.createElement("div"); sub.className = "card-sub";
+  if (hotseatSetupStage === 1) sub.textContent = "🎮 حالت دو نفره: بازیکن ۱ کشور خود را انتخاب کند.";
+  else if (hotseatSetupStage === 2) sub.textContent = `🎮 حالت دو نفره: اکنون دستگاه را به بازیکن ۲ بدهید و کشوری غیر از ${hotseatP1Choice.flag} ${hotseatP1Choice.name} انتخاب کنید.`;
+  else sub.textContent = "نبرد امپراتوری‌های ۲ را با رهبری یکی از ۲۰ قدرت جهانی آغاز کنید. ۱۹ کشور دیگر به‌عنوان رقبا و شرکای شما در بازی حضور خواهند داشت.";
+  c.appendChild(sub);
+  const grid = document.createElement("div"); grid.className = "grid2-4";
+  COUNTRIES.forEach(country => {
+    if (hotseatSetupStage === 2 && hotseatP1Choice && country.id === hotseatP1Choice.id) return;
+    const btn = document.createElement("button");
+    btn.className = "action-btn";
+    btn.style.justifyContent = "flex-start";
+    btn.innerHTML = `<span>${country.flag} ${country.name}</span>`;
+    btn.onclick = () => hotseatSetupStage === 0 ? chooseCountry(country.id) : pickHotseatCountry(country.id);
+    grid.appendChild(btn);
+  });
+  c.appendChild(grid);
+  tabContent.appendChild(c);
+
+  document.getElementById("forecastPanel").innerHTML = "";
+  const keyStats = document.getElementById("keyStats");
+  keyStats.innerHTML = "";
+  const logList = document.getElementById("eventLogList");
+  logList.innerHTML = "";
+  state.eventLog.forEach(e => {
+    const item = document.createElement("div"); item.className = "log-item"; item.textContent = e;
+    logList.appendChild(item);
+  });
+}
+
+// ---------- rendering ----------
+function render() {
+  if (!state.playerCountry) { renderCountryPicker(); return; }
+  syncHotseatPvp();
+
+  const rank = rankOf(powerScore());
+  document.getElementById("seal").textContent = state.playerCountry.flag;
+  document.getElementById("seal").style.borderColor = rank.color;
+  document.getElementById("seal").style.boxShadow = `0 0 14px ${rank.color}55`;
+  document.getElementById("rankLabel").textContent = `${state.playerCountry.flag} ${state.playerCountry.name} · ${rank.name} · امتیاز قدرت ${powerScore()}${state.hasNuclearWeapon ? " · ☢️" : ""}${hotseat.active ? ` · 🎮 نوبت بازیکن ${hotseat.turnOf}` : ""}`;
+  document.getElementById("rankLabel").style.color = rank.color;
+  document.getElementById("statYear").textContent = fmt(state.year);
+  document.getElementById("statTreasury").textContent = fmt(state.treasury) + "M$";
+  document.getElementById("statTreasury").style.color = state.treasury < 0 ? "#e07a6f" : "#c9a24b";
+  document.getElementById("statPopulation").textContent = fmtDec(state.population) + "M";
+  document.getElementById("statHappiness").textContent = fmt(state.happiness) + "%";
+  document.getElementById("statHappiness").style.color = state.happiness < 35 ? "#e07a6f" : "#7fbf8f";
+  document.getElementById("powerBar").style.width = powerScore() + "%";
+  document.getElementById("powerBar").style.background = rank.color;
+  document.getElementById("endTurnBtn").disabled = !!state.gameOver;
+
+  // tabs
+  const tabsEl = document.getElementById("tabs");
+  tabsEl.innerHTML = "";
+  TABS.forEach(t => {
+    const btn = document.createElement("button");
+    btn.className = "tab-btn" + (state.activeTab === t.id ? " active" : "");
+    btn.innerHTML = `${t.icon} ${t.label}`;
+    btn.onclick = () => { state.activeTab = t.id; render(); };
+    tabsEl.appendChild(btn);
+  });
+
+  // flash
+  const flashArea = document.getElementById("flashArea");
+  flashArea.innerHTML = "";
+  if (state.flash) {
+    const box = document.createElement("div");
+    box.className = "flash-box" + (state.flash.tone === "warn" ? " warn" : "");
+    box.innerHTML = `<div><div class="flash-title">${state.flash.title}</div><div>${state.flash.body}</div></div>`;
+    const closeBtn = document.createElement("button");
+    closeBtn.className = "flash-close"; closeBtn.textContent = "✕";
+    closeBtn.onclick = () => { state.flash = null; render(); };
+    box.appendChild(closeBtn);
+    flashArea.appendChild(box);
+  }
+
+  // game over
+  const goArea = document.getElementById("gameOverArea");
+  goArea.innerHTML = "";
+  if (state.gameOver) {
+    const box = document.createElement("div");
+    box.className = "gameover-box";
+    if (state.gameOver === "win") {
+      box.style.background = "#1c2a1e"; box.style.borderColor = "#3f6b45";
+      box.innerHTML = `<div class="gameover-title" style="color:#7fbf8f;">🏆 پیروزی!</div><div class="gameover-body" style="color:#c8d4c9;">کشور شما به یک ابرقدرت جهانی تبدیل شد، در سال ${state.year}.</div>`;
+    } else if (state.gameOver === "lose_happiness") {
+      box.style.background = "#2a1c1c"; box.style.borderColor = "#6b3f3f";
+      box.innerHTML = `<div class="gameover-title" style="color:#e07a6f;">💥 سقوط دولت</div><div class="gameover-body" style="color:#d9c3c1;">نارضایتی عمومی به قیام سراسری انجامید و دولت سقوط کرد.</div>`;
+    } else if (state.gameOver === "lose_money") {
+      box.style.background = "#2a1c1c"; box.style.borderColor = "#6b3f3f";
+      box.innerHTML = `<div class="gameover-title" style="color:#e07a6f;">💸 ورشکستگی</div><div class="gameover-body" style="color:#d9c3c1;">خزانه کشور به‌طور کامل تهی شد و اقتصاد فروپاشید.</div>`;
+    } else if (state.gameOver === "lose_coup") {
+      box.style.background = "#2a1c1c"; box.style.borderColor = "#6b3f3f";
+      box.innerHTML = `<div class="gameover-title" style="color:#e07a6f;">🗡️ کودتای نظامی</div><div class="gameover-body" style="color:#d9c3c1;">وفاداری فرماندهان ارتش به‌کلی از بین رفت و آن‌ها علیه دولت شما کودتا کردند.</div>`;
+    }
+    if (state.gameOver !== "win" && buildAdvisorRecap()) {
+      const recapNote = document.createElement("div");
+      recapNote.className = "gameover-body";
+      recapNote.style.cssText = "color:#c9a24b; margin-top:6px; font-size:12px;";
+      recapNote.textContent = "📼 مشاورت یه مرور از تصمیم‌هایی که نادیده گرفتی آماده کرده — تب «مشاور هوش مصنوعی» رو ببین.";
+      box.appendChild(recapNote);
+    }
+    goArea.appendChild(box);
+  }
+
+  renderTabContent();
+  renderSidebar();
+}
+
+function actionBtn(label, cost, onClick, accent) {
+  const btn = document.createElement("button");
+  btn.className = "action-btn";
+  btn.innerHTML = `<span>${label}</span><span class="action-cost" style="color:${accent || '#c9a24b'};">${fmt(cost)}M$</span>`;
+  btn.onclick = onClick;
+  return btn;
+}
+
+function cardEl(icon, title, accent) {
+  const card = document.createElement("div");
+  card.className = "card";
+  const head = document.createElement("div");
+  head.className = "card-head";
+  head.innerHTML = `<span class="card-icon">${icon}</span><div class="card-title" style="color:${accent || '#eae6da'};">${title}</div>`;
+  card.appendChild(head);
+  return card;
+}
+
+function statusIcon(status) {
+  if (status === "جنگ") return "⚔️";
+  if (status === "اتحاد") return "🤝";
+  if (status === "تجارت") return "🚢";
+  if (status === "تحت سلطه") return "🏴";
+  return "🏳️";
+}
+
+function polygonPoints(cx, cy, r, sides, seedOffset) {
+  const pts = [];
+  for (let i = 0; i < sides; i++) {
+    const angle = (i / sides) * Math.PI * 2 + seedOffset;
+    // irregular radius per vertex so territories look like landmasses, not perfect circles
+    const jitter = 0.78 + 0.28 * Math.abs(Math.sin(seedOffset * 3 + i * 2.1));
+    const rr = r * jitter;
+    pts.push(`${(cx + rr * Math.cos(angle)).toFixed(1)},${(cy + rr * Math.sin(angle)).toFixed(1)}`);
+  }
+  return pts.join(" ");
+}
+
+// number of cities each territory shows on the map and needs captured (one per war win,
+// capped at 5) before its color flips fully to "captured yellow"
+const CITIES_PER_COUNTRY = 5;
+const CITY_CAPTURED_COLOR = "#e6c84a";
+
+function buildMapSVG() {
+  const NS = "http://www.w3.org/2000/svg";
+  const MAP_SIZE = 760; // enlarged from 520 so 5 cities per territory have room to read clearly
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${MAP_SIZE} ${MAP_SIZE}`);
+  svg.setAttribute("width", "100%");
+  svg.setAttribute("style", "max-width:820px; display:block; margin:0 auto;");
+
+  const bg = document.createElementNS(NS, "rect");
+  bg.setAttribute("x", "0"); bg.setAttribute("y", "0");
+  bg.setAttribute("width", MAP_SIZE); bg.setAttribute("height", MAP_SIZE);
+  bg.setAttribute("rx", "16"); bg.setAttribute("fill", "#0a121a");
+  svg.appendChild(bg);
+
+  // "ocean" grid texture for a world-map feel
+  const grid = document.createElementNS(NS, "g");
+  grid.setAttribute("opacity", "0.35");
+  for (let x = 20; x < MAP_SIZE; x += 24) {
+    const l = document.createElementNS(NS, "line");
+    l.setAttribute("x1", x); l.setAttribute("y1", 0); l.setAttribute("x2", x); l.setAttribute("y2", MAP_SIZE);
+    l.setAttribute("stroke", "#152030"); l.setAttribute("stroke-width", "1");
+    grid.appendChild(l);
+  }
+  for (let y = 20; y < MAP_SIZE; y += 24) {
+    const l = document.createElementNS(NS, "line");
+    l.setAttribute("x1", 0); l.setAttribute("y1", y); l.setAttribute("x2", MAP_SIZE); l.setAttribute("y2", y);
+    l.setAttribute("stroke", "#152030"); l.setAttribute("stroke-width", "1");
+    grid.appendChild(l);
+  }
+  svg.appendChild(grid);
+
+  const rank = rankOf(powerScore());
+  const center = { x: MAP_SIZE / 2, y: MAP_SIZE / 2 };
+  const ourRadius = clamp(42 + state.population / 3, 46, 92);
+
+  const neighborNames = Object.keys(state.relations);
+  const n = neighborNames.length;
+  const positions = neighborNames.map((name, i) => {
+    const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+    const dist = 300;
+    return { name, x: center.x + dist * Math.cos(angle), y: center.y + dist * Math.sin(angle), angle };
+  });
+
+  // connecting supply/front lines
+  positions.forEach(pos => {
+    const r = state.relations[pos.name];
+    const line = document.createElementNS(NS, "line");
+    line.setAttribute("x1", center.x); line.setAttribute("y1", center.y);
+    line.setAttribute("x2", pos.x); line.setAttribute("y2", pos.y);
+    line.setAttribute("stroke", statusColor[r.status]);
+    line.setAttribute("stroke-width", r.status === "جنگ" ? "3" : "1.5");
+    if (r.status === "جنگ") line.setAttribute("stroke-dasharray", "7,5");
+    line.setAttribute("opacity", "0.8");
+    svg.appendChild(line);
+  });
+
+  // our territory (irregular landmass)
+  const ourShape = document.createElementNS(NS, "polygon");
+  ourShape.setAttribute("points", polygonPoints(center.x, center.y, ourRadius, 9, 0.4));
+  ourShape.setAttribute("fill", "#1c2530");
+  ourShape.setAttribute("stroke", rank.color);
+  ourShape.setAttribute("stroke-width", "3");
+  svg.appendChild(ourShape);
+
+  // ground unit markers scattered inside our territory (visual density = army size)
+  const groundUnitCount = clamp(Math.round(state.soldiers / 30000) + state.tanks, 3, 14);
+  for (let i = 0; i < groundUnitCount; i++) {
+    const a = (i / groundUnitCount) * Math.PI * 2 + 0.7;
+    const rr = ourRadius * 0.55;
+    const ux = center.x + rr * Math.cos(a);
+    const uy = center.y + rr * Math.sin(a);
+    const unit = document.createElementNS(NS, "text");
+    unit.setAttribute("x", ux); unit.setAttribute("y", uy + 3);
+    unit.setAttribute("text-anchor", "middle");
+    unit.setAttribute("font-size", "9");
+    unit.textContent = i % 3 === 0 ? "🛡️" : "⬦";
+    unit.setAttribute("fill", i % 3 === 0 ? "#c0453f" : "#7a8a99");
+    svg.appendChild(unit);
+  }
+
+  const ourIcon = document.createElementNS(NS, "text");
+  ourIcon.setAttribute("x", center.x); ourIcon.setAttribute("y", center.y - ourRadius - 10);
+  ourIcon.setAttribute("text-anchor", "middle");
+  ourIcon.setAttribute("font-size", "22");
+  ourIcon.textContent = "👑";
+  svg.appendChild(ourIcon);
+
+  const ourLabel = document.createElementNS(NS, "text");
+  ourLabel.setAttribute("x", center.x); ourLabel.setAttribute("y", center.y + 4);
+  ourLabel.setAttribute("text-anchor", "middle");
+  ourLabel.setAttribute("font-size", "11");
+  ourLabel.setAttribute("font-weight", "700");
+  ourLabel.setAttribute("fill", rank.color);
+  ourLabel.textContent = "کشور ما";
+  svg.appendChild(ourLabel);
+
+  const ourPowerLabel = document.createElementNS(NS, "text");
+  ourPowerLabel.setAttribute("x", center.x); ourPowerLabel.setAttribute("y", center.y + 18);
+  ourPowerLabel.setAttribute("text-anchor", "middle");
+  ourPowerLabel.setAttribute("font-size", "9");
+  ourPowerLabel.setAttribute("fill", "#b9c0cc");
+  ourPowerLabel.textContent = `قدرت نظامی ${fmt(militaryPower())}`;
+  svg.appendChild(ourPowerLabel);
+
+  // neighbor territories — irregular landmasses, clickable, each carrying 5 cities
+  positions.forEach((pos, i) => {
+    const r = state.relations[pos.name];
+    const radius = clamp(24 + r.power / 7, 24, 52);
+    const seed = i * 1.37 + 0.2;
+    const captured = clamp(r.citiesCaptured || 0, 0, CITIES_PER_COUNTRY);
+
+    const g = document.createElementNS(NS, "g");
+    g.style.cursor = "pointer";
+    g.onclick = () => { state.selectedMapCountry = pos.name; render(); };
+
+    const shape = document.createElementNS(NS, "polygon");
+    shape.setAttribute("points", polygonPoints(pos.x, pos.y, radius, 7, seed));
+    // a fully-captured territory (all 5 cities taken) reads as ours on the map even before annexation
+    shape.setAttribute("fill", captured >= CITIES_PER_COUNTRY ? "#241f14" : "#141d27");
+    shape.setAttribute("stroke", captured >= CITIES_PER_COUNTRY ? CITY_CAPTURED_COLOR : statusColor[r.status]);
+    shape.setAttribute("stroke-width", state.selectedMapCountry === pos.name ? "4" : "2.5");
+    g.appendChild(shape);
+
+    // enemy ground unit markers when at war
+    if (r.status === "جنگ") {
+      const enemyUnits = clamp(Math.round(r.power / 20), 2, 8);
+      for (let u = 0; u < enemyUnits; u++) {
+        const a = (u / enemyUnits) * Math.PI * 2;
+        const ux = pos.x + radius * 0.5 * Math.cos(a);
+        const uy = pos.y + radius * 0.5 * Math.sin(a);
+        const unit = document.createElementNS(NS, "text");
+        unit.setAttribute("x", ux); unit.setAttribute("y", uy + 3);
+        unit.setAttribute("text-anchor", "middle");
+        unit.setAttribute("font-size", "8");
+        unit.setAttribute("fill", "#e07a6f");
+        unit.textContent = "⚔️";
+        g.appendChild(unit);
+      }
+    }
+
+    // 5 cities arranged in a ring inside the territory — captured ones turn yellow
+    for (let ci = 0; ci < CITIES_PER_COUNTRY; ci++) {
+      const cAngle = (ci / CITIES_PER_COUNTRY) * Math.PI * 2 - Math.PI / 2;
+      const cDist = radius * 0.62;
+      const cx = pos.x + cDist * Math.cos(cAngle);
+      const cy = pos.y + cDist * Math.sin(cAngle);
+      const isCaptured = ci < captured;
+      const dot = document.createElementNS(NS, "circle");
+      dot.setAttribute("cx", cx); dot.setAttribute("cy", cy); dot.setAttribute("r", "5.5");
+      dot.setAttribute("fill", isCaptured ? CITY_CAPTURED_COLOR : "#141d27");
+      dot.setAttribute("stroke", isCaptured ? CITY_CAPTURED_COLOR : "#6b7684");
+      dot.setAttribute("stroke-width", "1.4");
+      g.appendChild(dot);
+    }
+
+    const icon = document.createElementNS(NS, "text");
+    icon.setAttribute("x", pos.x); icon.setAttribute("y", pos.y + 5);
+    icon.setAttribute("text-anchor", "middle");
+    icon.setAttribute("font-size", "13");
+    icon.textContent = statusIcon(r.status);
+    g.appendChild(icon);
+
+    const nameLabel = document.createElementNS(NS, "text");
+    nameLabel.setAttribute("x", pos.x); nameLabel.setAttribute("y", pos.y + radius + 13);
+    nameLabel.setAttribute("text-anchor", "middle");
+    nameLabel.setAttribute("font-size", "9.5");
+    nameLabel.setAttribute("font-weight", "700");
+    nameLabel.setAttribute("fill", "#eae6da");
+    nameLabel.textContent = `${r.flag || ""} ${pos.name}`;
+    g.appendChild(nameLabel);
+
+    const statusLabel = document.createElementNS(NS, "text");
+    statusLabel.setAttribute("x", pos.x); statusLabel.setAttribute("y", pos.y + radius + 25);
+    statusLabel.setAttribute("text-anchor", "middle");
+    statusLabel.setAttribute("font-size", "8.5");
+    statusLabel.setAttribute("fill", statusColor[r.status]);
+    statusLabel.textContent = `${r.status} · قدرت ${Math.round(r.power)}`;
+    g.appendChild(statusLabel);
+
+    const cityLabel = document.createElementNS(NS, "text");
+    cityLabel.setAttribute("x", pos.x); cityLabel.setAttribute("y", pos.y + radius + 37);
+    cityLabel.setAttribute("text-anchor", "middle");
+    cityLabel.setAttribute("font-size", "8");
+    cityLabel.setAttribute("fill", captured > 0 ? CITY_CAPTURED_COLOR : "#8a92a3");
+    cityLabel.textContent = `🏙️ شهرهای تصرف‌شده: ${fmt(captured)}/${CITIES_PER_COUNTRY}`;
+    g.appendChild(cityLabel);
+
+    svg.appendChild(g);
+  });
+
+  return svg;
+}
+
+// shared by the map panel and the diplomacy tab so the two views can never drift apart —
+// previously this block was duplicated in both places with its own copy of costs/labels,
+// which is exactly how the two screens could end up disagreeing about what an action costs
+function appendCountryActionButtons(c, country, r, showWarWinsNote) {
+  if (r.status === "تحت سلطه") {
+    const note = document.createElement("div"); note.className = "range-note";
+    note.textContent = `این سرزمین تحت سلطه شماست و هر نوبت ${fmt(220)} میلیون دلار خراج می‌پردازد.`;
+    c.appendChild(note);
+    return;
+  }
+  if (showWarWinsNote && r.status === "جنگ") {
+    const warNote = document.createElement("div"); warNote.className = "range-note";
+    warNote.style.marginBottom = "6px";
+    warNote.textContent = `پیروزی‌های نبرد: ${r.warWins || 0}/${annexWinsNeeded(country)} (برای الحاق سرزمین لازم است)`;
+    c.appendChild(warNote);
+  }
+  const grid = document.createElement("div"); grid.className = "grid2-4";
+  grid.appendChild(actionBtn("تقویت روابط", COSTS.strengthen, () => relationAction(country, "strengthen"), "#5b8fb9"));
+  grid.appendChild(actionBtn("پیشنهاد اتحاد", COSTS.alliance, () => relationAction(country, "alliance"), "#4caf7d"));
+  grid.appendChild(actionBtn("قرارداد تجاری", COSTS.trade, () => relationAction(country, "trade"), "#c9a24b"));
+  if (r.status === "جنگ") {
+    grid.appendChild(actionBtn("پیشنهاد آتش‌بس", COSTS.peace, () => relationAction(country, "peace"), "#7fbf8f"));
+  } else {
+    const warBtn = document.createElement("button");
+    warBtn.className = "war-btn";
+    warBtn.innerHTML = `⚔️ حمله و اعلام جنگ`;
+    warBtn.onclick = () => openWarJustify(country);
+    grid.appendChild(warBtn);
+  }
+  grid.appendChild(actionBtn("🕵️ خرابکاری", COSTS.sabotage, () => relationAction(country, "sabotage"), "#9b7fd4"));
+  grid.appendChild(actionBtn("🚢 محاصره دریایی", COSTS.blockade, () => relationAction(country, "blockade"), "#5b8fb9"));
+  grid.appendChild(actionBtn("🔥 حمایت از شورشیان", COSTS.incite, () => relationAction(country, "incite"), "#d98a3d"));
+  c.appendChild(grid);
+  if ((r.rebellion || 0) > 0) {
+    const rebelNote = document.createElement("div"); rebelNote.className = "range-note"; rebelNote.style.color = "#d98a3d"; rebelNote.style.margin = "6px 0";
+    rebelNote.textContent = `🔥 شورشیان نیابتی همچنان در این کشور فعال‌اند (${r.rebellion} نوبت باقی‌مانده) و قدرت آن‌ها را تضعیف می‌کنند.`;
+    c.appendChild(rebelNote);
+  }
+  if (canNuke(country)) {
+    const nukeBtn = document.createElement("button");
+    nukeBtn.className = "war-btn";
+    nukeBtn.style.cssText = "margin-top:6px; background:#2a1c33; border-color:#9b3fb9; color:#e0a9f0;";
+    nukeBtn.innerHTML = `☢️ حمله هسته‌ای (کلاهک‌ها: ${fmt(state.nuclearWarheads)})`;
+    nukeBtn.onclick = () => nuclearStrike(country);
+    c.appendChild(nukeBtn);
+  }
+  if (r.status === "جنگ" && (r.warWins || 0) >= annexWinsNeeded(country)) {
+    const annexBtn = document.createElement("button");
+    annexBtn.className = "action-btn";
+    annexBtn.style.cssText = "margin-top:6px; border-color:#9b7fd4; background:#241c33;";
+    annexBtn.innerHTML = `<span>🏴 الحاق سرزمین ${country}</span><span class="action-cost" style="color:#9b7fd4;">${fmt(COSTS.annex)}M$</span>`;
+    annexBtn.onclick = () => relationAction(country, "annex");
+    c.appendChild(annexBtn);
+  }
+}
+
+function buildMapSelectionPanel() {
+  const country = state.selectedMapCountry;
+  if (!country || !state.relations[country]) return null;
+  if (state.warJustifyTarget === country) return buildWarJustifyPanel(country);
+  const r = state.relations[country];
+  const c = cardEl("🎯", `کنترل نظامی و دیپلماتیک: ${r.flag ? r.flag + " " : ""}${country}`, statusColor[r.status]);
+
+  const row = document.createElement("div"); row.className = "country-row";
+  row.innerHTML = `<span style="color:#8a92a3;">وضعیت: <span style="color:${statusColor[r.status]}; font-weight:700;">${r.status}</span></span><span style="color:#8a92a3;">قدرت نظامی آن‌ها: ${fmt(r.power)}</span>`;
+  c.appendChild(row);
+
+  const cityRow = document.createElement("div"); cityRow.className = "country-row";
+  const captured = clamp(r.citiesCaptured || 0, 0, CITIES_PER_COUNTRY);
+  cityRow.innerHTML = `<span style="color:#8a92a3;">🏙️ شهرهای تصرف‌شده</span><span style="color:${captured > 0 ? CITY_CAPTURED_COLOR : '#8a92a3'}; font-weight:700;">${fmt(captured)}/${CITIES_PER_COUNTRY}</span>`;
+  c.appendChild(cityRow);
+
+  if ((r.blockadeTurns || 0) > 0) {
+    const bNote = document.createElement("div"); bNote.className = "range-note"; bNote.style.color = "#5b8fb9"; bNote.style.marginBottom = "6px";
+    bNote.textContent = `🚢 در محاصره دریایی شماست (${r.blockadeTurns} نوبت باقی‌مانده).`;
+    c.appendChild(bNote);
+  }
+
+  const compareBar = document.createElement("div"); compareBar.style.cssText = "display:flex; height:8px; border-radius:4px; overflow:hidden; margin-bottom:10px;";
+  const ourShare = clamp(militaryPower() / (militaryPower() + r.power) * 100, 4, 96);
+  compareBar.innerHTML = `<div style="width:${ourShare}%; background:${rankOf(powerScore()).color};"></div><div style="width:${100 - ourShare}%; background:${statusColor["جنگ"]};"></div>`;
+  c.appendChild(compareBar);
+  const compareNote = document.createElement("div"); compareNote.className = "range-note"; compareNote.style.marginBottom = "10px";
+  compareNote.textContent = ourShare >= 55 ? "ارتش شما در برتری نسبی قرار دارد." : ourShare <= 45 ? "ارتش دشمن قوی‌تر است؛ حمله پرریسک خواهد بود." : "توازن نظامی نزدیک است.";
+  c.appendChild(compareNote);
+
+  appendCountryActionButtons(c, country, r, false);
+  return c;
+}
+
+// ---------- AI advisor (fully local, no API/key/internet needed) ----------
+// A rule-based "chat" engine: lots of pre-written phrase variants + real game-state
+// data, picked and combined so replies don't feel like the same canned block every time.
+let advisorMessages = [];
+let advisorLoading = false;
+let advisorSuggestOpen = false;
+
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+const ADVISOR_GREETINGS = [
+  "سلام فرمانده! چطور می‌تونم امروز کمکت کنم؟",
+  "درود بر رهبر بزرگ! چه خبر از کاخ؟",
+  "سلام! آماده‌ام هر سؤالی درباره وضعیت کشورت داری بپرسم.",
+  "به به، سلام! بگو ببینم امروز دنبال چه استراتژی‌ای هستی.",
+];
+const ADVISOR_THANKS = [
+  "خواهش می‌کنم، وظیفمه که کنارت باشم فرمانده.",
+  "قابلی نداشت! هر وقت خواستی باز بپرس.",
+  "خوشحالم که کمک کرد. موفق باشی تو تصمیمات بعدیت.",
+];
+const ADVISOR_FAREWELL = [
+  "خدانگهدار فرمانده، موفق باشی!",
+  "به امید دیدار. مراقب خزانه و مرزهات باش!",
+  "فعلاً! هروقت به مشورت نیاز داشتی برگرد.",
+];
+const ADVISOR_UNKNOWN = [
+  "دقیق متوجه منظورت نشدم. می‌تونی درباره اقتصاد، ارتش، دیپلماسی، هسته‌ای، بحران/تحریم، رضایت مردم یا فناوری بپرسی.",
+  "این یکی رو نفهمیدم فرمانده! یه سؤال درباره وضعیت اقتصادی، نظامی یا دیپلماسی کشورت بپرس تا دقیق راهنماییت کنم.",
+  "هنوز نمی‌تونم به این سؤال جواب بدم. امتحان کن بپرس مثلاً «وضعیت اقتصادم چطوره؟» یا «باید وارد جنگ بشم؟»",
+];
+const ADVISOR_INTROS_ECONOMY = [
+  "بذار یه نگاه به وضعیت مالی‌مون بندازیم:",
+  "از نظر اقتصادی الان اینطوریم:",
+  "خب، درباره خزانه و مالیات:",
+];
+const ADVISOR_INTROS_MILITARY = [
+  "از نظر نظامی:",
+  "وضعیت ارتشمون این‌طوره:",
+  "بذار درباره قدرت نظامی صحبت کنیم:",
+];
+const ADVISOR_INTROS_DIPLOMACY = [
+  "از نظر دیپلماسی:",
+  "درباره روابط خارجیمون:",
+  "وضعیت متحدها و رقبا اینه:",
+];
+const ADVISOR_INTROS_NUCLEAR = [
+  "درباره برنامه هسته‌ای:",
+  "از نظر پرونده هسته‌ای:",
+];
+const ADVISOR_INTROS_CRISIS = [
+  "از نظر بحران و تحریم:",
+  "بذار وضعیت بحران‌ها رو چک کنیم:",
+];
+const ADVISOR_INTROS_SOCIAL = [
+  "از نظر اوضاع داخلی مردم:",
+  "درباره رضایت عمومی و بیکاری:",
+];
+const ADVISOR_INTROS_TECH = [
+  "از نظر علمی و فناوری:",
+  "درباره تحقیقات:",
+];
+
+// suggested "smart questions" shown as tappable chips in the advisor tab, grouped exactly
+// the way a real advisor's briefing categories would be
+const ADVISOR_SUGGESTED_QUESTIONS = {
+  "⚔️ جنگ و نیرو": [
+    "اگر همین الان به این کشور حمله کنم، کدام کشورهای ثالث وارد جنگ می‌شن؟",
+    "بهترین نقطه‌ضعف در دفاع دشمن کجاست؟",
+    "چقدر طول می‌کشه نیروی کمکی به جبهه برسه؟",
+  ],
+  "💰 اقتصاد و فناوری": [
+    "بین ساختن کارخانه یا دانشگاه، کدوم در ۱۰ نوبت آینده بازدهی بهتری داره؟",
+    "اگر تحریم بشم، کدام منبع داخلی رو باید جایگزین کنم؟",
+    "این فناوری جدید کدوم تاکتیک قبلی رو بی‌استفاده می‌کنه؟",
+  ],
+  "🕵️ دیپلماسی و جاسوسی": [
+    "پشت پرده، پادشاه همسایه از کدوم متحدش دلخوره؟",
+    "به نظرت پیشنهاد صلح من رو قبول می‌کنه یا فقط داره وقت می‌خره؟",
+    "اگر یه جاسوس بفرستم، اولویت اول جاسوسی چیه؟",
+  ],
+  "🏛️ شورش و مدیریت داخلی": [
+    "اگه مالیات رو بالا ببرم، اول کدوم استان شورش می‌کنه؟",
+    "بهترین راه برای تضعیف اشراف ناراضی، بدون ریختن خون چیه؟",
+  ],
+};
+
+// deterministic-ish pick so the same country/topic tends to give a consistent-feeling answer
+// instead of pure noise every time the player asks again
+function hashPick(seed, arr) {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+  return arr[h % arr.length];
+}
+
+// ---------- proactive advisor: the 5 things a real advisor should volunteer, not just answer ----------
+function generateProactiveBriefing() {
+  const notes = [];
+  const r = state.relations || {};
+  const wars = Object.entries(r).filter(([, v]) => v.status === "جنگ");
+
+  // 1) geopolitical warning
+  if (wars.length >= 2) {
+    notes.push({ key: "geo", text: `🌍 هشدار ژئوپلیتیک: همزمان با ${wars.length} کشور (${wars.map(([n]) => n).join("، ")}) در جنگید — مرزهاتون در معرض تهاجم چند جبهه‌ست. تا با یکی از این طرف‌ها آتش‌بس یا صلح نبندید، ریسک شکست همزمان بالاست.` });
+  } else {
+    const threat = Object.entries(r).find(([, v]) => v.status !== "جنگ" && v.status !== "تحت سلطه" && v.score < 30 && v.power > militaryPower() * 1.2);
+    if (threat) notes.push({ key: "geo", text: `🌍 هشدار ژئوپلیتیک: روابط شما با ${threat[0]} به‌شدت تیره‌ست و قدرت نظامیش از شما بالاتره — مرزهاتون در معرض یه حمله غافلگیرکننده‌ست. یا با دیپلماسی روابط رو تعمیر کنید یا سریع ارتشتون رو تقویت کنید.` });
+  }
+
+  // 2) economic forecast
+  const bd = incomeBreakdown();
+  if (wars.length > 0 && bd.netIncome < 0) {
+    const turnsToBroke = state.treasury > 0 ? Math.max(1, Math.ceil(state.treasury / Math.abs(bd.netIncome))) : 0;
+    notes.push({ key: "econ", text: turnsToBroke > 0 && turnsToBroke <= 12
+      ? `📉 پیش‌بینی اقتصادی: اگه این جنگ ${fmt(turnsToBroke)} نوبت دیگه همین‌طور ادامه پیدا کنه، خزانه کاملاً خالی می‌شه و ریسک شورش داخلی جدی می‌شه.`
+      : `📉 پیش‌بینی اقتصادی: هزینه‌های جنگ دارن از درآمدتون پیشی می‌گیرن؛ اگه چند نوبت دیگه همین‌طور ادامه پیدا کنه خزانه می‌ره تو منفی.` });
+  }
+
+  // 3) loyalty / popularity report
+  if (state.generalLoyalty < 45) {
+    notes.push({ key: "loyalty", text: `🎖️ گزارش وفاداری: وفاداری فرماندهان ارتش به ${fmt(state.generalLoyalty)}% رسیده. اگه به‌زودی یه پیروزی نظامی یا بهبود محسوس بهشون ندید، احتمال کودتا علیه دولت جدیه.` });
+  }
+
+  // 4) diplomatic alternative
+  if (wars.length > 0) {
+    const enemy = wars[0][0];
+    const altCandidates = Object.entries(r).filter(([n, v]) => n !== enemy && v.status !== "جنگ" && v.status !== "اتحاد");
+    if (altCandidates.length > 0) {
+      const alt = hashPick(enemy + state.turn, altCandidates)[0];
+      notes.push({ key: "diplo", text: `🤝 پیشنهاد دیپلماتیک: به‌جای ادامه یا گسترش جنگ با ${enemy}، با ${alt} متحد یا هم‌پیمان تجاری بشید — این باعث می‌شه در بحران تنها نمونید و روی ${enemy} فشار بیشتری وارد بشه.`, meta: { ally: alt } });
+    }
+  }
+
+  // 5) cost-opportunity analysis (tech/focus tree)
+  const availableFocus = FOCUS_TREE.find(f => !state.completedFocuses.includes(f.id) && (!state.activeFocus || state.activeFocus.id !== f.id) &&
+    f.requires.every(rq => state.completedFocuses.includes(rq)) && (!f.minTech || state.techLevel >= f.minTech) && state.treasury >= f.cost * 0.5);
+  if (!state.activeFocus && availableFocus) {
+    notes.push({ key: "tech", text: `💡 تحلیل هزینه-فرصت: کانون ملی «${availableFocus.name}» الان قابل شروعه. رقباتون هم دائم قوی‌تر می‌شن — هرچی دیرتر شروعش کنید، برتری اولیه‌ش رو بیشتر از دست می‌دید.`, meta: { focus: availableFocus.id } });
+  }
+
+  return notes;
+}
+
+// resolves earlier advice against what actually happened since — did the player follow it or ignore it?
+function evaluateAdvisorMemory() {
+  const r = state.relations || {};
+  const warsCount = Object.values(r).filter(v => v.status === "جنگ").length;
+  state.advisorMemory.forEach(m => {
+    if (m.resolved) return;
+    const age = state.turn - m.turn;
+    if (m.key === "geo") {
+      if (warsCount <= 1) { m.resolved = true; m.followed = true; }
+      else if (age >= 4) { m.resolved = true; m.followed = false; }
+    } else if (m.key === "econ") {
+      if (warsCount === 0) { m.resolved = true; m.followed = true; }
+      else if (state.gameOver === "lose_money") { m.resolved = true; m.followed = false; }
+      else if (age >= 6) { m.resolved = true; m.followed = false; }
+    } else if (m.key === "loyalty") {
+      if (state.generalLoyalty >= 55) { m.resolved = true; m.followed = true; }
+      else if (state.gameOver === "lose_coup") { m.resolved = true; m.followed = false; }
+      else if (age >= 5) { m.resolved = true; m.followed = false; }
+    } else if (m.key === "diplo") {
+      const rel = m.meta && m.meta.ally ? r[m.meta.ally] : null;
+      if (rel && (rel.status === "اتحاد" || rel.status === "تجارت")) { m.resolved = true; m.followed = true; }
+      else if (age >= 5) { m.resolved = true; m.followed = false; }
+    } else if (m.key === "tech") {
+      const focusId = m.meta && m.meta.focus;
+      if (focusId && (state.completedFocuses.includes(focusId) || (state.activeFocus && state.activeFocus.id === focusId))) { m.resolved = true; m.followed = true; }
+      else if (age >= 5) { m.resolved = true; m.followed = false; }
+    }
+  });
+}
+
+// end-of-game "long-term memory" reel: the advice you got but didn't act on
+function buildAdvisorRecap() {
+  const ignored = state.advisorMemory.filter(m => m.followed === false).slice(-3);
+  if (ignored.length === 0) return null;
+  return ignored.map(m => `نوبت ${fmt(m.turn)}: «${m.text}»\nولی بهش گوش ندادی...`).join("\n\n");
+}
+
+function generateAdvisorReply(rawText) {
+  const text = rawText.trim();
+  if (!state.playerCountry) {
+    return "اول باید یه کشور رو برای رهبری انتخاب کنی، بعد می‌تونم راهنماییت کنم.";
+  }
+  const has = (...words) => words.some(w => text.includes(w));
+  const r = state.relations || {};
+  const wars = Object.entries(r).filter(([, v]) => v.status === "جنگ");
+
+  // small talk gets priority only when the message is short and clearly just small talk
+  if (text.length < 20) {
+    if (has("سلام", "درود", "هی ", "سلام‌ ")) return pick(ADVISOR_GREETINGS);
+    if (has("ممنون", "مرسی", "متشکر", "دمت گرم")) return pick(ADVISOR_THANKS);
+    if (has("خداحافظ", "فعلا", "فعلاً", "بای")) return pick(ADVISOR_FAREWELL);
+  }
+
+  const sections = [];
+  const target = state.selectedMapCountry && r[state.selectedMapCountry] ? state.selectedMapCountry : null; // name string of the country selected on the map, if any
+  const tRel = target ? r[target] : null;
+
+  // --- war & forces: smart questions ---
+  if (has("ثالث")) {
+    const s = ["🌍 تحلیل جبهه‌های احتمالی:"];
+    if (target && tRel) {
+      const bigPowers = Object.entries(r).filter(([n, v]) => n !== target && v.status !== "جنگ" && v.power > 200);
+      if (tRel.power > 150 && bigPowers.length) s.push(`${target} به‌اندازه کافی مهمه که یکی از قدرت‌های بزرگ مثل ${hashPick(target, bigPowers)[0]} ممکنه از راه دور بهش کمک تسلیحاتی یا دیپلماتیک بده، حتی اگه مستقیم وارد جنگ نشه.`);
+      else s.push(`${target} در حال حاضر متحد قدرتمند شناخته‌شده‌ای نداره — احتمال ورود مستقیم یه کشور ثالث کمه، ولی افکار عمومی جهانی رو زیر نظر داشته باش (الان ${fmt(state.worldOpinion)}/100).`);
+    } else {
+      s.push("اول یه کشور رو روی نقشه انتخاب کن تا بتونم دقیق بگم حمله به اون کدوم کشورها رو ممکنه درگیر کنه.");
+    }
+    sections.push(s.join("\n"));
+  }
+  if (has("نقطه‌ضعف", "نقطه ضعف", "دفاع دشمن")) {
+    const s = ["🎯 تحلیل نقطه‌ضعف دشمن:"];
+    if (target && tRel) {
+      const weakness = tRel.power < militaryPower() ? "ارتششون از شما ضعیف‌تره؛ یه حمله زمینی مستقیم و سریع بهترین گزینه‌ست"
+        : hashPick(target, ["دفاع دریایی‌شون نسبت به زمینی ضعیف‌تره — محاصره دریایی می‌تونه قبل از حمله مستقیم فرسوده‌شون کنه", "روابط دیپلماتیک‌شون با همسایه‌ها تیره‌ست — با تحریک یه جبهه دوم می‌تونی نیروشون رو پخش کنی", "اقتصادشون به تجارت وابسته‌ست — تحریم یا محاصره قبل از جنگ می‌تونه قدرت نظامیشون رو تضعیف کنه"]);
+      s.push(`روی ${target}: ${weakness}.`);
+    } else {
+      s.push("یه کشور رو از تب دیپلماسی یا نقشه انتخاب کن تا نقطه‌ضعفش رو دقیق تحلیل کنم — نه فقط تعداد سرباز، بلکه دیپلماسی و اقتصادش رو هم می‌سنجم.");
+    }
+    sections.push(s.join("\n"));
+  }
+  if (has("نیروی کمکی", "نیرو کمکی", "کمکی به جبهه")) {
+    const s = ["🚚 پشتیبانی و رسیدن نیروی کمکی:"];
+    const speed = state.roads >= 60 && state.railways >= 3 ? "سریع" : state.roads >= 30 ? "متوسط" : "کند";
+    s.push(`با زیرساخت فعلی (جاده ${fmt(state.roads)}%، ${fmt(state.railways)} خط راه‌آهن)، سرعت رسیدن نیروی کمکی به جبهه در حد ${speed}‌ه.`);
+    if (speed !== "سریع") s.push("اگه روی «توسعه زیرساخت ملی» تو کانون‌های ملی سرمایه‌گذاری کنی، این زمان به‌شدت کوتاه‌تر می‌شه. برای الان، اگه نیرو دیر برسه بهتره تو دفاع بمونی نه حمله، تا از پراکندگی نیرو جلوگیری بشه.");
+    sections.push(s.join("\n"));
+  }
+
+  // --- economy & tech: smart questions ---
+  if (has("بازدهی") && has("کارخانه", "دانشگاه")) {
+    const s = ["📊 مقایسه بازدهی ۱۰ نوبت آینده:"];
+    const factoryGain = 190 * (state.powerPlants >= state.factories + 1 ? 1 : 0.6) * 10;
+    const uniEffect = "افزایش سطح فناوری و کاهش تدریجی بیکاری/رشد بلندمدت اقتصاد";
+    s.push(`یه کارخانه‌ی دیگه، طی ۱۰ نوبت حدود ${fmt(factoryGain)}M$ درآمد مستقیم اضافه می‌کنه (اگه نیروگاهت کافی باشه). یه دانشگاه‌ی دیگه سود مستقیم کمتری داره ولی روی ${uniEffect} اثر می‌ذاره.`);
+    s.push(state.techLevel < 40 ? "با سطح فناوری فعلیت، فعلاً دانشگاه اولویت بالاتریه." : "فناوریت خوبه؛ الان کارخانه بازدهی نقدی سریع‌تری بهت می‌ده.");
+    sections.push(s.join("\n"));
+  }
+  if (has("تحریم") && has("جایگزین", "منبع داخلی")) {
+    const s = ["🛡️ آماده‌سازی برای تحریم احتمالی:"];
+    s.push(`الان ${Object.values(r).filter(v => v.status === "تجارت").length} شریک تجاری داری که با تحریم از دستشون می‌دی. برای جایگزینی، سرمایه‌گذاری روی نفت (${fmt(state.oilFields)} میدون فعلی) و کارخانه (${fmt(state.factories)} کارخانه) بهترین راهه چون این‌ها درآمد داخلی‌ان و به روابط خارجی وابسته نیستن.`);
+    sections.push(s.join("\n"));
+  }
+  if (has("تاکتیک قبلی", "بی‌استفاده", "منسوخ")) {
+    const s = ["🔄 تحلیل جایگزینی فناوری:"];
+    if (state.hasNuclearWeapon) s.push("سلاح هسته‌ای که ساختی عملاً استراتژی «بازدارندگی با ارتش بزرگ زمینی» رو کم‌اهمیت‌تر می‌کنه — بازدارندگی هسته‌ای جایگزین قوی‌تری برای دفاع صرفه انسانیه.");
+    else if (state.nuclearStage > 0) s.push("برنامه هسته‌ای در جریانته؛ وقتی تکمیل بشه دیگه نیازی به گسترش بی‌رویه ارتش زمینی صرفاً برای بازدارندگی نداری.");
+    else s.push("فعلاً فناوری خاصی که تاکتیک قبلیت رو منسوخ کنه نداری؛ سرمایه‌گذاری روی «سرمایه‌گذاری در علم» تو کانون‌های ملی معمولاً اولین جهش بزرگه.");
+    sections.push(s.join("\n"));
+  }
+
+  // --- diplomacy & espionage: smart questions ---
+  if (has("پادشاه همسایه", "دلخور")) {
+    const s = ["🕵️ گزارش پشت‌پرده دیپلماتیک:"];
+    const candidates = Object.entries(r).filter(([, v]) => v.status !== "جنگ");
+    if (candidates.length) {
+      const [name] = hashPick(String(state.turn), candidates);
+      s.push(`شایعه‌ست که ${name} این اواخر از یکی از هم‌پیمان‌های خودش دلخوره — می‌تونه فرصت خوبی برای پیشنهاد اتحاد یا تجارت باشه، قبل از اینکه رابطه‌شون دوباره گرم بشه.`);
+    } else s.push("فعلاً خبر موثقی از اختلاف بین کشورهای دیگه ندارم.");
+    sections.push(s.join("\n"));
+  }
+  if (has("پیشنهاد صلح")) {
+    const s = ["🕊️ احتمال پذیرش صلح:"];
+    if (target && tRel) {
+      if (tRel.status === "جنگ" && tRel.warWins > 0) s.push(`چون تا الان ${fmt(tRel.warWins)} پیروزی روی ${target} داشتی، احتمال قبول واقعی صلح بالاست — نه فقط وقت‌کشی.`);
+      else if (tRel.status === "جنگ") s.push(`${target} هنوز شکست جدی نخورده، پس احتمالاً پیشنهاد صلح رو فقط برای خرید زمان و بازسازی ارتشش قبول می‌کنه، نه به‌خاطر تسلیم واقعی.`);
+      else s.push(`با ${target} در جنگ نیستی، پس بحث صلح موضوعیت نداره؛ روابطتون الان «${tRel.status}» هست.`);
+    } else s.push("یه کشور رو انتخاب کن تا بگم احتمال جدی بودن پیشنهاد صلحش چقدره.");
+    sections.push(s.join("\n"));
+  }
+  if (has("جاسوس")) {
+    const s = ["🎯 اولویت‌بندی عملیات جاسوسی:"];
+    if (target && tRel) {
+      const priority = tRel.status === "جنگ" ? "نقشه‌ی دفاعی و جابه‌جایی نیروهاشون" : tRel.power > militaryPower() ? "سطح فناوری نظامیشون" : "وضعیت خزانه و اقتصادشون";
+      s.push(`برای ${target}، اولویت اول جاسوسی باید «${priority}» باشه — این بیشترین برگ برنده رو به تصمیم بعدیت می‌ده.`);
+    } else s.push("در حالت کلی: اگه در جنگی، اول نقشه‌ی دفاعی طرف مقابل رو بگیر؛ اگه در صلحی، اول اقتصاد و فناوریش رو بررسی کن.");
+    sections.push(s.join("\n"));
+  }
+
+  // --- rebellion & internal management: smart questions ---
+  if (has("مالیات") && has("شورش", "استان")) {
+    const s = ["🔥 ریسک شورش با افزایش مالیات:"];
+    const risky = state.happiness < 45 ? "استان‌های کم‌درآمد و پرجمعیت اولین جایی‌ان که ناآرامی شروع می‌شه" : "با رضایت فعلی مردم، هنوز به آستانه‌ی شورش نرسیدی، ولی فاصله زیادی هم نداری";
+    s.push(`${risky}. بیکاری الان ${fmt(state.unemployment)}%‌ه و رضایت ${fmt(state.happiness)}%؛ هرچی این دوتا بدتر بشه، افزایش مالیات خطرناک‌تر می‌شه.`);
+    sections.push(s.join("\n"));
+  }
+  if (has("اشراف")) {
+    const s = ["🏛️ تضعیف اشراف ناراضی بدون خون‌ریزی:"];
+    s.push("بهترین راه، «قانون اصلاحات سیاسی» یا «قانون آزادی مطبوعات» تو تب قوانینه — با افزایش رضایت عمومی و شفافیت، پایگاه قدرت اشراف سنتی رو بدون درگیری مستقیم کم می‌کنه.");
+    sections.push(s.join("\n"));
+  }
+
+  if (has("اقتصاد", "مالیات", "خزانه", "بودجه", "پول", "درآمد")) {
+    const s = [pick(ADVISOR_INTROS_ECONOMY)];
+    s.push(`خزانه: ${fmt(state.treasury)}M$ | نرخ مالیات: ${state.taxRate}%`);
+    if (state.treasury < 0) s.push("⚠️ خزانه‌ت منفیه — یا مالیات رو بالا ببر یا هزینه‌های نظامی/زیرساختی رو کم کن، وگرنه وارد بحران اقتصادی می‌شی.");
+    else if (state.treasury < 1000) s.push("خزانه‌ت کمه؛ قبل از خرید تجهیزات گرون یا شروع جنگ جدید، چند نوبت پس‌انداز کن.");
+    else s.push("وضعیت خزانه خوبه — می‌تونی روی زیرساخت، تحقیقات یا ارتش سرمایه‌گذاری کنی.");
+    if (state.inflation > 25) s.push(`⚠️ تورم ${fmt(state.inflation)}%‌ه و بالاست؛ مالیات خیلی بالا یا چاپ پول بی‌رویه می‌تونه بدترش کنه.`);
+    sections.push(s.join("\n"));
+  }
+  if (has("ارتش", "نظامی", "جنگ", "حمله", "سرباز", "تانک", "جنگنده")) {
+    const s = [pick(ADVISOR_INTROS_MILITARY)];
+    s.push(`قدرت نظامی: ${fmt(militaryPower())}`);
+    if (wars.length > 0) {
+      s.push(`الان توی ${wars.length} جنگ فعال هستی: ${wars.map(([n]) => n).join("، ")}.`);
+      s.push("تا جنگ‌های فعلی رو نبستی یا برنده نشدی، وارد جنگ جدید نشو — روی دو جبهه جنگیدن معمولاً خزانه و رضایت مردم رو نابود می‌کنه.");
+    } else {
+      s.push("الان درگیر جنگی نیستی. قبل از اعلام جنگ جدید، قدرت نظامی طرف مقابل رو با خودت مقایسه کن و یه دلیل موجه (casus belli) داشته باش تا افکار عمومی جهانی خیلی ضربه نخوره.");
+    }
+    sections.push(s.join("\n"));
+  }
+  if (has("دیپلماسی", "روابط", "اتحاد", "متحد", "صلح")) {
+    const s = [pick(ADVISOR_INTROS_DIPLOMACY)];
+    const allies = Object.entries(r).filter(([, v]) => v.status === "اتحاد").map(([n]) => n);
+    s.push(allies.length ? `الان با ${allies.join("، ")} متحدی.` : "فعلاً هیچ متحدی نداری.");
+    s.push("متحد داشتن قبل از جنگ خیلی مهمه — روابطت با قدرت‌های بزرگ (آمریکا، روسیه، چین) رو با تجارت یا کمک تقویت کن تا در بحران تنها نمونی.");
+    sections.push(s.join("\n"));
+  }
+  if (has("هسته‌ای", "هسته ای", "بمب", "کلاهک")) {
+    const s = [pick(ADVISOR_INTROS_NUCLEAR)];
+    if (state.hasNuclearWeapon) s.push(`سلاح هسته‌ای داری (${fmt(state.nuclearWarheads || 0)} کلاهک). داشتنش بازدارندگی قویه ولی افکار عمومی جهانی رو پایین میاره و ریسک تحریم داره.`);
+    else s.push(`در مرحله ${fmt(state.nuclearStage)}/3 برنامه هسته‌ای هستی. ادامه‌ش باعث نگرانی جهانی و احتمال تحریم می‌شه — با فناوری و خزانه بالا سریع‌تر پیش می‌ری.`);
+    sections.push(s.join("\n"));
+  }
+  if (has("بحران", "تحریم")) {
+    const s = [pick(ADVISOR_INTROS_CRISIS)];
+    if (state.crisisTurns > 0) s.push(`⚠️ ${state.crisisTurns} نوبت دیگه در بحران اقتصادی هستی — مالیات رو مدیریت کن و از جنگ جدید پرهیز کن تا رد بشه.`);
+    if (state.unSanctionTurns > 0) s.push(`🇺🇳 تحت تحریم سازمان ملل هستی (${state.unSanctionTurns} نوبت مونده) — این معمولاً درآمد و روابط تجاری رو کاهش می‌ده.`);
+    if (state.crisisTurns === 0 && state.unSanctionTurns === 0) s.push("فعلاً نه بحران اقتصادی داری نه تحریمی — وضعیت باثباته.");
+    sections.push(s.join("\n"));
+  }
+  if (has("رضایت", "بیکاری", "مردم", "اعتراض")) {
+    const s = [pick(ADVISOR_INTROS_SOCIAL)];
+    s.push(`رضایت مردم ${fmt(state.happiness)}% و بیکاری ${fmt(state.unemployment)}%‌ه.`);
+    if (state.happiness < 35) s.push("⚠️ رضایت پایینه — ریسک ناآرامی داخلی داری. مالیات رو کم کن یا روی بهداشت/آموزش سرمایه‌گذاری کن.");
+    if (state.unemployment > 20) s.push("بیکاری بالاست؛ ساخت کارخانه و نیروگاه معمولاً بهترین راه کاهششه.");
+    sections.push(s.join("\n"));
+  }
+  if (has("فناوری", "تحقیق", "علم")) {
+    const s = [pick(ADVISOR_INTROS_TECH)];
+    s.push(`سطح فناوری: ${fmt(state.techLevel)}/100`);
+    s.push("سرمایه‌گذاری روی دانشگاه و تحقیقات، هم اقتصادت رو تقویت می‌کنه هم پیشرفت پروژه هسته‌ای/نظامی رو سریع‌تر می‌کنه.");
+    sections.push(s.join("\n"));
+  }
+
+  if (sections.length > 0) return sections.join("\n\n");
+
+  // fallback: general status + open invitation, phrased differently each time
+  const summaryIntro = pick([
+    `وضعیت کلی ${state.playerCountry.flag} ${state.playerCountry.name} در سال ${fmt(state.year)}:`,
+    `بذار یه گزارش کلی از ${state.playerCountry.name} بدم:`,
+    `این خلاصه وضعیت فعلیته:`,
+  ]);
+  const lines = [summaryIntro];
+  lines.push(`💰 خزانه ${fmt(state.treasury)}M$ | 😊 رضایت ${fmt(state.happiness)}% | ⚔️ قدرت نظامی ${fmt(militaryPower())} | 🇺🇳 افکار عمومی جهانی ${fmt(state.worldOpinion)}/100`);
+  const worries = [];
+  if (state.treasury < 0) worries.push("خزانه منفی");
+  if (state.happiness < 35) worries.push("رضایت پایین مردم");
+  if (state.inflation > 25) worries.push("تورم بالا");
+  if (wars.length > 0) worries.push(`درگیری در ${wars.length} جنگ`);
+  if (state.crisisTurns > 0) worries.push("بحران اقتصادی");
+  lines.push(worries.length ? `مهم‌ترین نگرانی‌ها الان: ${worries.join("، ")}.` : "فعلاً وضعیت باثباته — می‌تونی روی رشد بلندمدت (فناوری، زیرساخت، دیپلماسی) تمرکز کنی.");
+  lines.push(pick(ADVISOR_UNKNOWN));
+  return lines.join("\n");
+}
+
+function sendAdvisorMessage(text) {
+  if (!text.trim() || advisorLoading) return;
+  advisorMessages.push({ role: "user", content: text });
+  advisorLoading = true;
+  renderTabContent();
+  // tiny delay just so it doesn't feel like a static instant lookup
+  setTimeout(() => {
+    advisorMessages.push({ role: "assistant", content: generateAdvisorReply(text) });
+    advisorLoading = false;
+    renderTabContent();
+  }, 250);
+}
+
+function renderTabContent() {
+  const el = document.getElementById("tabContent");
+  el.innerHTML = "";
+
+  if (state.activeTab === "map") {
+    const c1 = cardEl("🗺️", "نقشه جهانی نبرد", "#5b8fb9");
+    const sub = document.createElement("div"); sub.className = "card-sub";
+    sub.textContent = "روی هر سرزمین کلیک کنید تا نیروهای خود را در همان‌جا مستقیماً کنترل کنید: حمله، صلح، اتحاد یا تجارت.";
+    c1.appendChild(sub);
+    c1.appendChild(buildMapSVG());
+
+    const legend = document.createElement("div");
+    legend.style.cssText = "display:flex; flex-wrap:wrap; gap:14px; margin-top:14px; font-size:11px; color:#b9c0cc;";
+    Object.entries(statusColor).forEach(([status, color]) => {
+      const item = document.createElement("div");
+      item.style.cssText = "display:flex; align-items:center; gap:5px;";
+      item.innerHTML = `<span style="width:10px;height:10px;border-radius:50%;background:${color};display:inline-block;"></span>${status}`;
+      legend.appendChild(item);
+    });
+    c1.appendChild(legend);
+    el.appendChild(c1);
+
+    const panel = buildMapSelectionPanel();
+    if (panel) el.appendChild(panel);
+
+    const c2 = cardEl("🏞️", "دارایی‌های سرزمینی", "#7fbf8f");
+    const grid = document.createElement("div"); grid.className = "grid2-4";
+    const territoryItems = [
+      ["🛢️ چاه نفت", state.oilFields],
+      ["🏭 کارخانه", state.factories],
+      ["⚡ نیروگاه", state.powerPlants],
+      ["🎓 دانشگاه", state.universities],
+      ["🏥 بیمارستان", state.hospitals],
+      ["🚆 راه‌آهن", state.railways],
+    ];
+    territoryItems.forEach(([label, count]) => {
+      const row = document.createElement("div");
+      row.style.cssText = "display:flex; justify-content:space-between; font-size:12px; padding:6px 10px; background:#1c2530; border-radius:6px;";
+      row.innerHTML = `<span>${label}</span><span style="font-weight:700;">${count}</span>`;
+      grid.appendChild(row);
+    });
+    c2.appendChild(grid);
+    el.appendChild(c2);
+  }
+
+  if (state.activeTab === "economy") {
+    const c1 = cardEl("💰", "خزانه‌داری و مالیات", "#c9a24b");
+    c1.innerHTML += `<div class="card-sub">خزانه فعلی: <span style="color:#c9a24b; font-weight:700;">${fmt(state.treasury)} میلیون دلار</span></div>
+      <label class="range-label">نرخ مالیات: ${state.taxRate}%</label>
+      <input type="range" min="0" max="50" value="${state.taxRate}" class="range-input" id="taxRange">
+      <div class="range-note">مالیات بالاتر یعنی درآمد بیشتر برای دولت، اما رضایت مردم را کاهش می‌دهد.</div>`;
+    el.appendChild(c1);
+    document.getElementById("taxRange").oninput = (e) => { state.taxRate = Number(e.target.value); render(); };
+
+    const c1b = cardEl("📊", "ریز درآمد و هزینه هر بخش", "#7fbf8f");
+    const bd = incomeBreakdown();
+    const rows = [
+      ["مالیات", bd.taxIncome, "#c9a24b"],
+      ["نفت", bd.oilIncome, "#5b8fb9"],
+      ["کارخانه‌ها", bd.factoryIncome, "#c9a24b"],
+      ["قراردادهای تجاری", bd.tradeBonus, "#c9a24b"],
+      ["متحدان", bd.allianceBonus, "#4caf7d"],
+      ["خراج سرزمین‌های تحت سلطه", bd.tributeIncome, "#9b7fd4"],
+      ["غنیمت محاصره دریایی", bd.blockadeIncome, "#5b8fb9"],
+      ["نگهداری ارتش و زیرساخت", -bd.upkeep, "#e07a6f"],
+      ["هزینه‌های جنگ", -bd.warUpkeep, "#e07a6f"],
+    ];
+    rows.forEach(([label, value, color]) => {
+      if (Math.abs(value) < 0.5) return;
+      const row = document.createElement("div"); row.className = "stat-row";
+      row.innerHTML = `<span class="stat-row-label">${label}</span><span class="stat-row-value" style="color:${value < 0 ? '#e07a6f' : color};">${value >= 0 ? '+' : ''}${fmt(value)}M$</span>`;
+      c1b.appendChild(row);
+    });
+    const totalRow = document.createElement("div"); totalRow.className = "stat-row"; totalRow.style.cssText = "border-top:1px solid #2a3542; padding-top:8px; margin-top:4px;";
+    totalRow.innerHTML = `<span class="stat-row-label" style="font-weight:700; color:#eae6da;">مجموع خالص</span><span class="stat-row-value${bd.netIncome < 0 ? ' bad' : ''}">${bd.netIncome >= 0 ? '+' : ''}${fmt(bd.netIncome)}M$</span>`;
+    c1b.appendChild(totalRow);
+    el.appendChild(c1b);
+
+    const c2 = cardEl("🛢️", "نفت، صادرات و واردات", "#5b8fb9");
+    const sub = document.createElement("div"); sub.className = "card-sub"; sub.textContent = `چاه‌های نفت فعال: ${state.oilFields}`;
+    c2.appendChild(sub);
+    c2.appendChild(actionBtn("حفر چاه نفت جدید", 1600 + state.oilFields * 420, act.oil, "#5b8fb9"));
+    const note = document.createElement("div"); note.className = "range-note";
+    note.textContent = "قراردادهای تجاری با کشورهای دیگر از بخش دیپلماسی قابل انعقاد است و درآمد صادرات را افزایش می‌دهد.";
+    c2.appendChild(note);
+    el.appendChild(c2);
+
+    const c3 = cardEl("📦", "واردات و صادرات منابع", "#c9a24b");
+    const sub3 = document.createElement("div"); sub3.className = "card-sub";
+    sub3.textContent = "علاوه بر پول، ذخایر نفت، غذا و فناوری کشور را می‌توانید با بازار جهانی معامله کنید. شرکای تجاری/متحد قیمت بهتری می‌دهند.";
+    c3.appendChild(sub3);
+    if (!state.resources) state.resources = { oil: 60, food: 60, tech: 40 };
+    const bestPartnerScore = Object.values(state.relations).filter(r => r.status === "تجارت" || r.status === "اتحاد").length > 0;
+    RESOURCE_TYPES.forEach(res => {
+      const row = document.createElement("div");
+      row.style.cssText = "display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px 10px; background:#1c2530; border-radius:6px; margin-bottom:6px; flex-wrap:wrap;";
+      const label = document.createElement("span");
+      label.innerHTML = `${res.icon} ${res.name}: <b>${fmt(state.resources[res.id])}</b>`;
+      row.appendChild(label);
+      const btnWrap = document.createElement("div"); btnWrap.style.cssText = "display:flex; gap:6px;";
+      const priceMult = bestPartnerScore ? 0.85 : 1; // trade partners/allies improve both import and export prices
+      const importCost = Math.round(res.unitPrice * TRADE_UNIT * priceMult);
+      const exportGain = Math.round(res.unitPrice * TRADE_UNIT * 0.8 * (bestPartnerScore ? 1.1 : 1));
+      const importBtn = document.createElement("button");
+      importBtn.className = "action-btn"; importBtn.style.cssText = "padding:6px 10px; height:auto;";
+      importBtn.innerHTML = `<span>واردات ${TRADE_UNIT}</span><span class="action-cost">${fmt(importCost)}M$</span>`;
+      importBtn.onclick = () => {
+        if (!spend(importCost)) return render();
+        state.resources[res.id] = clamp(state.resources[res.id] + TRADE_UNIT, 0, 300);
+        state.resourceTradeVolume = (state.resourceTradeVolume || 0) + TRADE_UNIT;
+        log(`📦 ${TRADE_UNIT} واحد ${res.name} از بازار جهانی وارد شد (هزینه ${fmt(importCost)} میلیون دلار).`);
+        render();
+      };
+      const exportBtn = document.createElement("button");
+      exportBtn.className = "action-btn"; exportBtn.style.cssText = "padding:6px 10px; height:auto;";
+      exportBtn.innerHTML = `<span>صادرات ${TRADE_UNIT}</span><span class="action-cost" style="color:#7fbf8f;">+${fmt(exportGain)}M$</span>`;
+      exportBtn.onclick = () => {
+        if (state.resources[res.id] < TRADE_UNIT) { flashMsg("امکان‌پذیر نیست", `ذخیره ${res.name} کافی نیست.`, "warn"); return render(); }
+        state.resources[res.id] -= TRADE_UNIT;
+        state.treasury += exportGain;
+        state.resourceTradeVolume = (state.resourceTradeVolume || 0) + TRADE_UNIT;
+        log(`📦 ${TRADE_UNIT} واحد ${res.name} به بازار جهانی صادر شد (${fmt(exportGain)} میلیون دلار سود).`);
+        render();
+      };
+      btnWrap.appendChild(importBtn); btnWrap.appendChild(exportBtn);
+      row.appendChild(btnWrap);
+      c3.appendChild(row);
+    });
+    el.appendChild(c3);
+  }
+
+  if (state.activeTab === "infra") {
+    const grid = document.createElement("div"); grid.className = "grid2";
+    const items = [
+      ["🏭", "کارخانه", "#c9a24b", `تعداد فعلی: ${state.factories}`, "ساخت کارخانه جدید", 800 + state.factories * 220, act.factory],
+      ["⚡", "نیروگاه برق", "#e0c15f", `تعداد فعلی: ${state.powerPlants}`, "احداث نیروگاه", 950 + state.powerPlants * 260, act.power],
+      ["🛣️", "جاده", "#8a92a3", `پوشش شبکه: ${state.roads}%`, "گسترش جاده‌ها", 400 + state.roads * 8, act.road],
+      ["🚆", "راه‌آهن", "#8a92a3", `تعداد خطوط: ${state.railways}`, "احداث خط راه‌آهن", 900 + state.railways * 300, act.rail],
+      ["🎓", "آموزش و دانشگاه", "#5b8fb9", `تعداد دانشگاه‌ها: ${state.universities} · سطح آموزش: ${Math.round(state.education)}/100`, "ساخت دانشگاه", 700 + state.universities * 220, act.university],
+      ["📚", "اصلاح برنامه درسی", "#c9a24b", `سطح آموزش فعلی: ${Math.round(state.education)}/100`, "سرمایه‌گذاری در آموزش", COSTS.educate, act.educate],
+      ["🏥", "بیمارستان", "#7fbf8f", `تعداد بیمارستان‌ها: ${state.hospitals}`, "ساخت بیمارستان", 600 + state.hospitals * 200, act.hospital],
+    ];
+    items.forEach(([icon, title, accent, subText, btnLabel, cost, fn]) => {
+      const c = cardEl(icon, title, accent);
+      const sub = document.createElement("div"); sub.className = "card-sub"; sub.textContent = subText;
+      c.appendChild(sub);
+      c.appendChild(actionBtn(btnLabel, cost, fn, accent));
+      grid.appendChild(c);
+    });
+    el.appendChild(grid);
+  }
+
+  if (state.activeTab === "military") {
+    const c0 = cardEl("🛡️", "نیروی نظامی کل", "#c0453f");
+    const sub0 = document.createElement("div"); sub0.className = "card-sub";
+    sub0.innerHTML = `قدرت نظامی کلی: <span style="color:#c0453f; font-weight:700;">${fmt(militaryPower())}</span>`;
+    c0.appendChild(sub0);
+    el.appendChild(c0);
+
+    // soldiers stay generic manpower — everything else is drawn from the player's faction roster
+    const soldierCost = 260 + Math.floor(state.soldiers / 5000) * 4;
+    const cSoldiers = cardEl("👥", "نیروی انسانی", "#c0453f");
+    const subS = document.createElement("div"); subS.className = "card-sub"; subS.textContent = `تعداد: ${fmt(state.soldiers)} نفر`;
+    cSoldiers.appendChild(subS);
+    cSoldiers.appendChild(actionBtn("استخدام ۵٬۰۰۰ سرباز", soldierCost, act.soldiers, "#c0453f"));
+    el.appendChild(cSoldiers);
+
+    const roster = rosterFor(state.playerCountry.id);
+    const categories = [
+      { key: "ground", aggregateKey: "tanks", label: "زرهی و نیروی زمینی", accent: "#c0453f", act: act.tank, scaling: 10, base: 160 },
+      { key: "artillery", aggregateKey: "artillery", label: "توپخانه و موشک", accent: "#d98a3d", act: act.artillery, scaling: 14, base: 210 },
+      { key: "air", aggregateKey: "jets", label: "نیروی هوایی", accent: "#5b8fb9", act: act.jet, scaling: 40, base: 650 },
+      { key: "navy", aggregateKey: "ships", label: "نیروی دریایی", accent: "#7fbf8f", act: act.ship, scaling: 35, base: 520 },
+    ];
+    categories.forEach(cat => {
+      const c = cardEl(roster[cat.key][0]?.icon || "🛡️", cat.label, cat.accent);
+      const subCat = document.createElement("div"); subCat.className = "card-sub";
+      subCat.textContent = `مجموع این دسته: ${state[cat.aggregateKey]} · هزینه واحد بعدی: ${fmt(cat.base + state[cat.aggregateKey] * cat.scaling)}M$`;
+      c.appendChild(subCat);
+      roster[cat.key].forEach(item => {
+        const owned = state.unitPicks[cat.key][item.id] || 0;
+        const row = document.createElement("button");
+        row.className = "action-btn";
+        row.innerHTML = `<span>${item.icon} ${item.name} <span style="color:#8a92a3;">(${fmt(owned)})</span></span><span class="action-cost" style="color:${cat.accent};">${fmt(cat.base + state[cat.aggregateKey] * cat.scaling)}M$</span>`;
+        row.onclick = () => cat.act(item.id);
+        c.appendChild(row);
+      });
+      el.appendChild(c);
+    });
+  }
+
+  if (state.activeTab === "un") {
+    const opColor = state.worldOpinion >= 65 ? "#4caf7d" : state.worldOpinion >= 35 ? "#c9a24b" : "#c0453f";
+    const unCard = cardEl("🇺🇳", "افکار عمومی جهانی", opColor);
+    const unRow = document.createElement("div"); unRow.className = "country-row";
+    unRow.innerHTML = `<span style="color:#8a92a3;">جایگاه بین‌المللی شما</span><span style="color:${opColor}; font-weight:700;">${Math.round(state.worldOpinion)}/100</span>`;
+    unCard.appendChild(unRow);
+    const unBarBg = document.createElement("div"); unBarBg.className = "bar-bg";
+    const unBarFill = document.createElement("div"); unBarFill.className = "bar-fill";
+    unBarFill.style.width = clamp(state.worldOpinion, 0, 100) + "%"; unBarFill.style.background = opColor;
+    unBarBg.appendChild(unBarFill); unCard.appendChild(unBarBg);
+    const unNote = document.createElement("div"); unNote.className = "range-note"; unNote.style.marginTop = "6px";
+    unNote.textContent = state.unSanctionTurns > 0
+      ? `🚨 سازمان ملل جنگ‌های اخیر شما را محکوم کرده و تحریم‌های اقتصادی اعمال شده است (${state.unSanctionTurns} نوبت باقی‌مانده).`
+      : "اعلام جنگ بدون دلیل موجه، سازمان ملل و افکار عمومی جهانی را علیه شما بسیج می‌کند و به تحریم می‌انجامد؛ جنگ‌های موجه از نظر جهانی تأثیر مثبتی بر جایگاه شما دارند.";
+    unCard.appendChild(unNote);
+    el.appendChild(unCard);
+
+    const scCard = cardEl("🏛️", "اعضای دائم شورای امنیت", "#5b8fb9");
+    const scSub = document.createElement("div"); scSub.className = "card-sub";
+    scSub.textContent = "پیش از هر اعلام جنگ رسمی، پرونده باید در شورای امنیت مطرح شود. اگر هر یک از این سه قدرت با جنگ شما مخالفت کند (وتو)، حق اعلام رسمی جنگ را نخواهید داشت — مگر با دلیلی موجه‌تر یا با بهبود روابط دوجانبه.";
+    scCard.appendChild(scSub);
+    PERMANENT_MEMBERS.forEach(member => {
+      const row = document.createElement("div"); row.className = "country-row";
+      const cInfo = COUNTRIES.find(x => x.name === member);
+      const rel = state.relations[member];
+      let statusText, color;
+      if (!rel) { statusText = "کشور تحت رهبری شما"; color = "#c9a24b"; }
+      else { statusText = `${rel.status} · روابط ${Math.round(rel.score)}/100`; color = statusColor[rel.status]; }
+      row.innerHTML = `<span>${cInfo?.flag || ""} ${member}</span><span style="color:${color}; font-weight:700;">${statusText}</span>`;
+      scCard.appendChild(row);
+    });
+    el.appendChild(scCard);
+  }
+
+  if (state.activeTab === "diplomacy") {
+    Object.entries(state.relations).forEach(([country, r]) => {
+      if (state.warJustifyTarget === country) { el.appendChild(buildWarJustifyPanel(country)); return; }
+      const c = cardEl("🌐", `${r.flag ? r.flag + " " : ""}${country}`, statusColor[r.status]);
+      const row = document.createElement("div"); row.className = "country-row";
+      row.innerHTML = `<span style="color:#8a92a3;">وضعیت: <span style="color:${statusColor[r.status]}; font-weight:700;">${r.status}</span></span><span style="color:#8a92a3;">امتیاز روابط: ${Math.round(r.score)}/100</span>`;
+      c.appendChild(row);
+      const barBg = document.createElement("div"); barBg.className = "bar-bg";
+      const barFill = document.createElement("div"); barFill.className = "bar-fill";
+      barFill.style.width = r.score + "%"; barFill.style.background = statusColor[r.status];
+      barBg.appendChild(barFill); c.appendChild(barBg);
+
+      if ((r.blockadeTurns || 0) > 0) {
+        const bNote = document.createElement("div"); bNote.className = "range-note"; bNote.style.color = "#5b8fb9";
+        bNote.textContent = `🚢 در محاصره دریایی شماست (${r.blockadeTurns} نوبت باقی‌مانده).`;
+        c.appendChild(bNote);
+      }
+
+      appendCountryActionButtons(c, country, r, true);
+      el.appendChild(c);
+    });
+  }
+
+  if (state.activeTab === "tech") {
+    const c = cardEl("🔬", "تحقیقات و فناوری", "#9b7fd4");
+    const sub = document.createElement("div"); sub.className = "card-sub"; sub.style.marginBottom = "4px";
+    sub.textContent = `سطح فناوری: ${Math.round(state.techLevel)}/100`;
+    c.appendChild(sub);
+    const barBg = document.createElement("div"); barBg.className = "bar-bg";
+    const barFill = document.createElement("div"); barFill.className = "bar-fill";
+    barFill.style.width = state.techLevel + "%"; barFill.style.background = "#9b7fd4";
+    barBg.appendChild(barFill); c.appendChild(barBg);
+    const note = document.createElement("div"); note.className = "range-note"; note.style.marginBottom = "12px";
+    note.textContent = `هر دانشگاه بازده پروژه‌های تحقیقاتی را افزایش می‌دهد. دانشگاه‌های فعلی: ${state.universities}`;
+    c.appendChild(note);
+    c.appendChild(actionBtn("آغاز پروژه تحقیقاتی", 550, act.research, "#9b7fd4"));
+    const nukeNote = document.createElement("div"); nukeNote.className = "range-note"; nukeNote.style.marginTop = "10px";
+    nukeNote.textContent = state.hasNuclearWeapon
+      ? `☢️ کشور شما به سلاح هسته‌ای دست یافته است. کلاهک‌های موجود: ${fmt(state.nuclearWarheads || 0)}`
+      : `برنامه هسته‌ای از بخش «کانون‌های ملی» پیگیری می‌شود (مرحله فعلی: ${fmt(state.nuclearStage)}/3).`;
+    c.appendChild(nukeNote);
+    if (state.hasNuclearWeapon) {
+      const warheadCost = 1800 + (state.nuclearWarheads || 0) * 250;
+      const wBtn = actionBtn("🧨 تولید کلاهک هسته‌ای جدید", warheadCost, act.warhead, "#9b7fd4");
+      wBtn.style.marginTop = "8px";
+      c.appendChild(wBtn);
+      const useNote = document.createElement("div"); useNote.className = "range-note"; useNote.style.marginTop = "6px";
+      useNote.textContent = "کلاهک‌ها فقط علیه کشورهایی قابل استفاده‌اند که با آن‌ها در جنگ هستید — دکمه «☢️ حمله هسته‌ای» در تب دیپلماسی یا نقشه ظاهر می‌شود.";
+      c.appendChild(useNote);
+    }
+    el.appendChild(c);
+  }
+
+  if (state.activeTab === "focus") {
+    const c0 = cardEl("🎯", "کانون‌های ملی", "#d98a3d");
+    const sub0 = document.createElement("div"); sub0.className = "card-sub";
+    sub0.textContent = state.activeFocus
+      ? `در حال پیشرفت: ${(FOCUS_TREE.find(f => f.id === state.activeFocus.id) || {}).name} (${state.activeFocus.turnsLeft} نوبت باقی‌مانده)`
+      : "در هر لحظه فقط یک کانون می‌تواند در حال پیشرفت باشد. برخی کانون‌ها به پیش‌نیاز یا سطح فناوری خاصی نیاز دارند.";
+    c0.appendChild(sub0);
+    el.appendChild(c0);
+
+    const cats = [...new Set(FOCUS_TREE.map(f => f.cat))];
+    cats.forEach(cat => {
+      const c = cardEl("📂", cat, "#c9a24b");
+      FOCUS_TREE.filter(f => f.cat === cat).forEach(f => {
+        const done = state.completedFocuses.includes(f.id);
+        const locked = f.requires.some(r => !state.completedFocuses.includes(r)) || (f.minTech && state.techLevel < f.minTech);
+        const inProgress = state.activeFocus && state.activeFocus.id === f.id;
+        const row = document.createElement("div");
+        row.style.cssText = "border:1px solid #2a3542; border-radius:8px; padding:8px 10px; margin-bottom:8px;";
+        row.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <span style="font-weight:700;">${f.icon} ${f.name}${done ? " ✅" : locked ? " 🔒" : ""}</span>
+          <span style="font-size:11px; color:#8a92a3;">${fmt(f.cost)}M$ · ${f.turns} نوبت</span>
+        </div><div style="font-size:11px; color:#8a92a3;">${f.desc}${f.minTech ? ` (نیازمند فناوری ${f.minTech}+)` : ""}</div>`;
+        if (!done) {
+          const btn = document.createElement("button");
+          btn.className = "action-btn"; btn.style.marginTop = "6px";
+          const disabled = locked || (!!state.activeFocus && !inProgress);
+          btn.disabled = disabled;
+          btn.style.opacity = disabled ? "0.45" : "1";
+          btn.innerHTML = inProgress
+            ? `<span>در حال انجام… (${state.activeFocus.turnsLeft} نوبت باقی‌مانده)</span>`
+            : `<span>${locked ? "نیازمندی‌ها تکمیل نشده" : "آغاز کانون"}</span>`;
+          if (!disabled && !inProgress) btn.onclick = () => startFocus(f.id);
+          row.appendChild(btn);
+        }
+        c.appendChild(row);
+      });
+      el.appendChild(c);
+    });
+  }
+
+  if (state.activeTab === "laws") {
+    const c0 = cardEl("⚖️", "قوانین و لوایح", "#5b8fb9");
+    const sub0 = document.createElement("div"); sub0.className = "card-sub";
+    sub0.textContent = "هر لایحه پس از پیشنهاد به رأی‌گیری گذاشته می‌شود؛ شانس تصویب به رضایت عمومی مردم بستگی دارد. هزینه‌ی لایحه (هزینه‌ی کمپین و چانه‌زنی در مجلس) در هر صورت — چه تصویب شود، چه رد — از خزانه کسر می‌شود.";
+    c0.appendChild(sub0);
+    el.appendChild(c0);
+    LAWS.forEach(lawItem => {
+      const passed = state.enactedLaws.includes(lawItem.id);
+      const locked = lawItem.minTech && state.techLevel < lawItem.minTech;
+      const c = cardEl(lawItem.icon, lawItem.name, passed ? "#7fbf8f" : "#5b8fb9");
+      const sub = document.createElement("div"); sub.className = "card-sub"; sub.textContent = lawItem.desc;
+      c.appendChild(sub);
+      if (passed) {
+        const note = document.createElement("div"); note.className = "range-note";
+        note.textContent = "✅ این لایحه به تصویب رسیده است.";
+        c.appendChild(note);
+      } else {
+        const chance = clamp(0.55 + (state.happiness - 50) / 250, 0.25, 0.9);
+        const note = document.createElement("div"); note.className = "range-note"; note.style.marginBottom = "6px";
+        note.textContent = locked ? `نیازمند سطح فناوری حداقل ${lawItem.minTech}` : `شانس تصویب در مجلس: ٪${Math.round(chance * 100)}`;
+        c.appendChild(note);
+        const btn = actionBtn("پیشنهاد و رأی‌گیری", lawItem.cost, () => passLaw(lawItem.id), "#5b8fb9");
+        if (locked) { btn.disabled = true; btn.style.opacity = "0.45"; btn.onclick = null; }
+        c.appendChild(btn);
+      }
+      el.appendChild(c);
+    });
+  }
+
+  if (state.activeTab === "leadership") {
+    if (state.pendingSuccession) {
+      const c0 = cardEl("👑", "انتخاب وارث", "#c9a24b");
+      const sub0 = document.createElement("div"); sub0.className = "card-sub";
+      sub0.textContent = "رهبر پیشین کناره‌گیری کرد. یکی از وارثان زیر را برای رهبری بعدی کشور انتخاب کنید — هر کدام سبک متفاوتی دارند.";
+      c0.appendChild(sub0);
+      el.appendChild(c0);
+      state.pendingSuccession.forEach((heir, idx) => {
+        const style = LEADER_STYLES.find(x => x.id === heir.styleId);
+        const c = cardEl(style.icon, `${heir.name} · ${style.name}`, "#5b8fb9");
+        const sub = document.createElement("div"); sub.className = "card-sub"; sub.textContent = `سن: ${fmt(heir.age)} — ${style.desc}`;
+        c.appendChild(sub);
+        const btn = document.createElement("button");
+        btn.className = "action-btn"; btn.style.justifyContent = "center";
+        btn.innerHTML = `<span>انتخاب به‌عنوان رهبر جدید</span>`;
+        btn.onclick = () => chooseHeir(idx);
+        c.appendChild(btn);
+        el.appendChild(c);
+      });
+    } else if (state.leader) {
+      const style = LEADER_STYLES.find(x => x.id === state.leader.styleId);
+      const c = cardEl(style.icon, `${state.leader.name} · رهبر فعلی`, "#c9a24b");
+      const sub = document.createElement("div"); sub.className = "card-sub"; sub.textContent = `سن: ${fmt(state.leader.age)} سال — سبک رهبری: ${style.name}`;
+      c.appendChild(sub);
+      const desc = document.createElement("div"); desc.className = "range-note"; desc.textContent = style.desc;
+      c.appendChild(desc);
+      el.appendChild(c);
+
+      const c2 = cardEl("📜", "نسل‌های پیشین رهبری", "#7fbf8f");
+      if (!state.leaderHistory || state.leaderHistory.length === 0) {
+        const note = document.createElement("div"); note.className = "range-note"; note.textContent = "هنوز جانشینی رخ نداده است.";
+        c2.appendChild(note);
+      } else {
+        state.leaderHistory.slice().reverse().forEach(prev => {
+          const pStyle = LEADER_STYLES.find(x => x.id === prev.styleId);
+          const row = document.createElement("div"); row.className = "country-row";
+          row.innerHTML = `<span>${pStyle.icon} ${prev.name}</span><span style="color:#8a92a3;">${pStyle.name}</span>`;
+          c2.appendChild(row);
+        });
+      }
+      el.appendChild(c2);
+    }
+  }
+
+  if (state.activeTab === "achievements") {
+    const c0 = cardEl("🏆", "دستاوردها", "#c9a24b");
+    const sub0 = document.createElement("div"); sub0.className = "card-sub";
+    sub0.textContent = `${(state.unlockedAchievements || []).length} از ${ACHIEVEMENTS.length} دستاورد کسب شده است.`;
+    c0.appendChild(sub0);
+    el.appendChild(c0);
+    ACHIEVEMENTS.forEach(a => {
+      const unlocked = (state.unlockedAchievements || []).includes(a.id);
+      const c = cardEl(a.icon, a.name, unlocked ? "#c9a24b" : "#8a92a3");
+      c.style.opacity = unlocked ? "1" : "0.55";
+      const sub = document.createElement("div"); sub.className = "card-sub"; sub.textContent = a.desc;
+      c.appendChild(sub);
+      const note = document.createElement("div"); note.className = "range-note";
+      note.textContent = unlocked ? "✅ کسب شده" : "🔒 هنوز کسب نشده";
+      c.appendChild(note);
+      el.appendChild(c);
+    });
+  }
+
+  if (state.activeTab === "advisor") {
+    const chatCard = cardEl("🤖", "مشاور هوش مصنوعی", "#c9a24b");
+    const chatSub = document.createElement("div"); chatSub.className = "card-sub";
+    chatSub.textContent = "درباره وضعیت کشورت و استراتژی اقتصادی، نظامی یا دیپلماسی سؤال بپرس.";
+    chatCard.appendChild(chatSub);
+
+    const chatList = document.createElement("div");
+    chatList.className = "log-list";
+    chatList.style.cssText = chatList.style.cssText + "display:flex; flex-direction:column; gap:8px; margin-bottom:12px;";
+    if (advisorMessages.length === 0) {
+      const empty = document.createElement("div"); empty.className = "range-note"; empty.textContent = "هنوز پیامی رد و بدل نشده. یه سؤال بپرس!";
+      chatList.appendChild(empty);
+    }
+    advisorMessages.forEach(m => {
+      const bubble = document.createElement("div");
+      const isUser = m.role === "user";
+      const isNote = m.role === "system-note";
+      const isAlert = m.role === "advisor-alert";
+      bubble.style.cssText = "max-width:85%; padding:8px 12px; border-radius:10px; font-size:12px; line-height:1.6; white-space:pre-wrap; align-self:" +
+        (isUser ? "flex-end" : "flex-start") + "; background:" + (isUser ? "#1c2530" : isAlert ? "#2a2313" : isNote ? "#2b1c1c" : "#20304a") +
+        "; color:" + (isAlert ? "#e8cf8a" : isNote ? "#e5a9a3" : "#eae6da") + "; border:1px solid " + (isUser ? "#2a3542" : isAlert ? "#6b5a2f" : isNote ? "#5a2f2f" : "#2a4a6a") + ";";
+      bubble.textContent = m.content;
+      chatList.appendChild(bubble);
+    });
+    if (advisorLoading) {
+      const loadingEl = document.createElement("div");
+      loadingEl.style.cssText = "align-self:flex-start; font-size:12px; color:#8a92a3;";
+      loadingEl.textContent = "در حال فکر کردن...";
+      chatList.appendChild(loadingEl);
+    }
+    chatCard.appendChild(chatList);
+
+    // general loyalty gauge — a quiet reminder of the coup-risk clock the advisor is tracking
+    const loyaltyRow = document.createElement("div");
+    loyaltyRow.style.cssText = "display:flex; align-items:center; justify-content:space-between; font-size:11px; color:#8a92a3; margin-bottom:10px;";
+    const loyaltyColor = state.generalLoyalty < 30 ? "#e07a6f" : state.generalLoyalty < 55 ? "#c9a24b" : "#7fbf8f";
+    loyaltyRow.innerHTML = `<span>🎖️ وفاداری فرماندهان ارتش</span><span style="color:${loyaltyColor}; font-weight:700;">${fmt(state.generalLoyalty)}%</span>`;
+    chatCard.appendChild(loyaltyRow);
+
+    // suggested-question chips, grouped into the 4 categories a sharp commander would ask about
+    const suggestToggle = document.createElement("button");
+    suggestToggle.className = "tab-btn";
+    suggestToggle.style.cssText = "margin-bottom:8px;";
+    suggestToggle.textContent = advisorSuggestOpen ? "▲ بستن سؤال‌های پیشنهادی" : "💡 سؤال‌های پیشنهادی";
+    suggestToggle.onclick = () => { advisorSuggestOpen = !advisorSuggestOpen; renderTabContent(); };
+    chatCard.appendChild(suggestToggle);
+
+    if (advisorSuggestOpen) {
+      const suggestBox = document.createElement("div");
+      suggestBox.style.cssText = "display:flex; flex-direction:column; gap:8px; margin-bottom:12px; padding:10px; border:1px solid #2a3542; border-radius:8px; background:#161f29;";
+      Object.entries(ADVISOR_SUGGESTED_QUESTIONS).forEach(([cat, questions]) => {
+        const catLabel = document.createElement("div");
+        catLabel.style.cssText = "font-size:11px; color:#8a92a3; font-weight:700;";
+        catLabel.textContent = cat;
+        suggestBox.appendChild(catLabel);
+        const chipRow = document.createElement("div");
+        chipRow.style.cssText = "display:flex; flex-wrap:wrap; gap:6px; margin-bottom:4px;";
+        questions.forEach(q => {
+          const chip = document.createElement("button");
+          chip.textContent = q;
+          chip.style.cssText = "font-family:inherit; font-size:11px; padding:6px 10px; border-radius:14px; border:1px solid #2a4a6a; background:#1c2530; color:#b9c0cc; cursor:pointer; text-align:right;";
+          chip.disabled = advisorLoading;
+          chip.onclick = () => { advisorSuggestOpen = false; sendAdvisorMessage(q); };
+          chipRow.appendChild(chip);
+        });
+        suggestBox.appendChild(chipRow);
+      });
+      chatCard.appendChild(suggestBox);
+    }
+
+    const inputRow = document.createElement("div"); inputRow.style.cssText = "display:flex; gap:8px;";
+    const msgInput = document.createElement("input");
+    msgInput.type = "text";
+    msgInput.placeholder = "سؤالت رو بپرس...";
+    msgInput.style.cssText = "flex:1; padding:9px 12px; border-radius:8px; border:1px solid #2a3542; background:#1c2530; color:#eae6da; font-family:inherit; font-size:12px;";
+    msgInput.disabled = advisorLoading;
+    const sendBtn = document.createElement("button");
+    sendBtn.textContent = "ارسال";
+    sendBtn.className = "end-turn-btn";
+    sendBtn.disabled = advisorLoading;
+    const doSend = () => {
+      const val = msgInput.value;
+      if (!val.trim() || advisorLoading) return;
+      msgInput.value = "";
+      sendAdvisorMessage(val);
+    };
+    sendBtn.onclick = doSend;
+    msgInput.onkeydown = (e) => { if (e.key === "Enter") doSend(); };
+    inputRow.appendChild(msgInput);
+    inputRow.appendChild(sendBtn);
+    chatCard.appendChild(inputRow);
+
+    el.appendChild(chatCard);
+  }
+}
+
+function renderSidebar() {
+  const forecast = projectNextTurn();
+  const forecastPanel = document.getElementById("forecastPanel");
+  forecastPanel.innerHTML = "";
+  const incomeRow = document.createElement("div"); incomeRow.className = "stat-row";
+  incomeRow.innerHTML = `<span class="stat-row-label">درآمد خالص تخمینی</span><span class="stat-row-value${forecast.netIncome < 0 ? ' bad' : ''}">${forecast.netIncome >= 0 ? '+' : ''}${fmt(forecast.netIncome)}M$</span>`;
+  forecastPanel.appendChild(incomeRow);
+  const happyRow = document.createElement("div"); happyRow.className = "stat-row";
+  const happyArrow = forecast.happinessDelta > 0.3 ? "↑" : forecast.happinessDelta < -0.3 ? "↓" : "→";
+  happyRow.innerHTML = `<span class="stat-row-label">تغییر رضایت مردم</span><span class="stat-row-value${forecast.happinessDelta < -0.3 ? ' bad' : ''}">${happyArrow} ${forecast.happinessDelta >= 0 ? '+' : ''}${forecast.happinessDelta.toFixed(1)}%</span>`;
+  forecastPanel.appendChild(happyRow);
+  const note = document.createElement("div"); note.className = "range-note";
+  note.textContent = forecast.atWar
+    ? "تخمینی است؛ هزینه‌های جنگ و رویدادهای تصادفی می‌توانند نتیجه واقعی را تغییر دهند."
+    : "تخمینی بر اساس شرایط فعلی؛ رویدادهای تصادفی ممکن است آن را تغییر دهند.";
+  forecastPanel.appendChild(note);
+
+  const keyStats = document.getElementById("keyStats");
+  keyStats.innerHTML = "";
+  const rows = [
+    ["بیکاری", `${fmt(state.unemployment)}%`, state.unemployment > 20],
+    ["آموزش", `${fmt(state.education)}/100`, false],
+    ["بهداشت", `${fmt(state.health)}/100`, false],
+    ["فناوری", `${fmt(state.techLevel)}/100`, false],
+    ["قدرت نظامی", fmt(militaryPower()), false],
+    ["وضعیت هسته‌ای", state.hasNuclearWeapon ? `☢️ مسلح (${fmt(state.nuclearWarheads || 0)} کلاهک)` : `مرحله ${fmt(state.nuclearStage)}/3`, false],
+    ["🇺🇳 افکار عمومی جهانی", `${fmt(state.worldOpinion)}/100`, state.worldOpinion < 35],
+    ["📈 تورم", `${fmt(state.inflation)}%`, state.inflation > 25],
+  ];
+  rows.forEach(([label, value, bad]) => {
+    const row = document.createElement("div"); row.className = "stat-row";
+    row.innerHTML = `<span class="stat-row-label">${label}</span><span class="stat-row-value${bad ? ' bad' : ''}">${value}</span>`;
+    keyStats.appendChild(row);
+  });
+  if (state.crisisTurns > 0) {
+    const note = document.createElement("div"); note.className = "crisis-note";
+    note.textContent = `⚠️ بحران اقتصادی (${state.crisisTurns} نوبت باقی‌مانده)`;
+    keyStats.appendChild(note);
+  }
+  if (state.unSanctionTurns > 0) {
+    const note = document.createElement("div"); note.className = "crisis-note";
+    note.textContent = `🇺🇳 تحریم‌های سازمان ملل (${state.unSanctionTurns} نوبت باقی‌مانده)`;
+    keyStats.appendChild(note);
+  }
+
+  const logList = document.getElementById("eventLogList");
+  logList.innerHTML = "";
+  state.eventLog.forEach(e => {
+    const item = document.createElement("div"); item.className = "log-item"; item.textContent = e;
+    logList.appendChild(item);
+  });
+}
+
+document.getElementById("endTurnBtn").onclick = () => { hotseat.active ? hotseatAdvance() : endTurn(); };
+document.getElementById("newGameBtn").onclick = () => {
+  showConfirmModal(
+    "بازی جدید",
+    "بازی فعلی پاک شود و از نو شروع شود؟",
+    () => {
+      try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+      state = freshState();
+      hotseat = { active: false, turnOf: 1, snapshots: [null, null] };
+      hotseatSetupStage = 0; hotseatP1Choice = null;
+      advisorMessages = [];
+      advisorLoading = false;
+      advisorSuggestOpen = false;
+      render();
+    }
+  );
+};
+
+// custom confirm dialog — window.confirm() is blocked or silently a no-op inside many
+// embedded webviews / installed PWA shells, which made the new-game button look dead.
+function showConfirmModal(title, body, onConfirm) {
+  const existing = document.getElementById("customConfirmOverlay");
+  if (existing) existing.remove();
+  const overlay = document.createElement("div");
+  overlay.id = "customConfirmOverlay";
+  overlay.style.cssText = "position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:9999; padding:20px;";
+  const box = document.createElement("div");
+  box.style.cssText = "background:#141d27; border:1px solid #2a3542; border-radius:12px; padding:20px; max-width:340px; width:100%; text-align:center; font-family:inherit;";
+  const t = document.createElement("div"); t.style.cssText = "font-weight:800; font-size:16px; margin-bottom:8px; color:#eae6da;"; t.textContent = title;
+  const b = document.createElement("div"); b.style.cssText = "font-size:13px; color:#b9c0cc; margin-bottom:16px;"; b.textContent = body;
+  const btnRow = document.createElement("div"); btnRow.style.cssText = "display:flex; gap:8px;";
+  const okBtn = document.createElement("button");
+  okBtn.textContent = "بله، شروع کن";
+  okBtn.style.cssText = "flex:1; padding:10px; border-radius:8px; border:none; background:#c9a24b; color:#141d27; font-weight:700; cursor:pointer; font-family:inherit; font-size:13px;";
+  okBtn.onclick = () => { overlay.remove(); onConfirm(); };
+  const cancelBtn = document.createElement("button");
+  cancelBtn.textContent = "انصراف";
+  cancelBtn.style.cssText = "flex:1; padding:10px; border-radius:8px; border:1px solid #2a3542; background:#1c2530; color:#eae6da; font-weight:700; cursor:pointer; font-family:inherit; font-size:13px;";
+  cancelBtn.onclick = () => overlay.remove();
+  btnRow.appendChild(okBtn); btnRow.appendChild(cancelBtn);
+  box.appendChild(t); box.appendChild(b); box.appendChild(btnRow);
+  overlay.appendChild(box);
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+  document.body.appendChild(overlay);
+}
+
+// ---------- offline install + save progress ----------
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
+
+const SAVE_KEY = "nation-empire-save";
+function saveGame() {
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify({ state, hotseat })); } catch (e) {}
+}
+function loadGame() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      // saves from before hotseat support stored the state object directly at the top level;
+      // newer saves wrap it as {state, hotseat} — support both transparently
+      const loaded = parsed && parsed.state ? parsed.state : parsed;
+      if (parsed && parsed.hotseat && parsed.hotseat.active) hotseat = parsed.hotseat;
+      // merge onto freshState() so older saves (before this update) get the new fields safely
+      state = Object.assign(freshState(), loaded);
+      if (!state.resources || typeof state.resources !== "object") state.resources = { oil: 60, food: 60, tech: 40 };
+      if (typeof state.resourceTradeVolume !== "number") state.resourceTradeVolume = 0;
+      if (typeof state.rebellionsIncited !== "number") state.rebellionsIncited = 0;
+      if (!Array.isArray(state.unlockedAchievements)) state.unlockedAchievements = [];
+      if (typeof state.peaceStreak !== "number") state.peaceStreak = 0;
+      if (!Array.isArray(state.leaderHistory)) state.leaderHistory = [];
+      if (!state.leader && state.playerCountry) state.leader = generateLeader();
+      if (!Array.isArray(state.completedFocuses)) state.completedFocuses = [];
+      if (!Array.isArray(state.enactedLaws)) state.enactedLaws = [];
+      if (typeof state.nuclearStage !== "number") state.nuclearStage = 0;
+      if (typeof state.hasNuclearWeapon !== "boolean") state.hasNuclearWeapon = false;
+      if (typeof state.nuclearWarheads !== "number" || Number.isNaN(state.nuclearWarheads)) state.nuclearWarheads = state.hasNuclearWeapon ? 2 : 0;
+      if (!state.relations || typeof state.relations !== "object") state.relations = {};
+      if (typeof state.generalLoyalty !== "number" || Number.isNaN(state.generalLoyalty)) state.generalLoyalty = 72;
+      if (typeof state.coupWarningTurns !== "number") state.coupWarningTurns = 0;
+      if (!Array.isArray(state.advisorMemory)) state.advisorMemory = [];
+      if (!state.unitPicks || typeof state.unitPicks !== "object") state.unitPicks = { ground: {}, air: {}, navy: {}, artillery: {} };
+      ["ground", "air", "navy", "artillery"].forEach(cat => { if (!state.unitPicks[cat] || typeof state.unitPicks[cat] !== "object") state.unitPicks[cat] = {}; });
+      // an old save's country/relations used the retired fictional roster — require a fresh pick
+      if (!state.playerCountry || !COUNTRIES.some(c => c.id === state.playerCountry.id)) {
+        state.playerCountry = null;
+        state.relations = {};
+      }
+      // backfill any relation fields that didn't exist in older save versions — without this,
+      // a missing `power` turns into NaN and silently breaks map radii, combat odds, and annex checks
+      Object.entries(state.relations).forEach(([name, r]) => {
+        if (typeof r.power !== "number" || Number.isNaN(r.power)) r.power = 80;
+        if (typeof r.score !== "number" || Number.isNaN(r.score)) r.score = 30;
+        if (!r.status) r.status = "خنثی";
+        if (typeof r.warWins !== "number") r.warWins = 0;
+        if (typeof r.warTurns !== "number") r.warTurns = 0;
+        if (typeof r.blockadeTurns !== "number") r.blockadeTurns = 0;
+        if (typeof r.citiesCaptured !== "number" || Number.isNaN(r.citiesCaptured)) r.citiesCaptured = 0;
+        if (!r.flag) r.flag = COUNTRIES.find(c => c.name === name)?.flag || "";
+      });
+    }
+  } catch (e) {}
+}
+loadGame();
+
+const originalRender = render;
+render = function () {
+  originalRender();
+  saveGame();
+};
+
+render();
+</script>
+</body>
+</html>
